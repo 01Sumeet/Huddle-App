@@ -1,0 +1,20 @@
+:root {
+    --bg-color: #131313;
+    --bg-up-color: #2e343d;
+    --highlight: #6b8afd;
+    --text-color: #a9aeba;
+  }
+
+ 
+  .css-10hburv-MuiTypography-root{
+    font-family: "Poppins",sans-serif !important;
+  }
+  .css-quvied-MuiContainer-root{
+    padding: 0 !important;
+  }
+  .setting{
+    margin-top: 10px !important;
+  }
+  .css-1lcr2x4-MuiButtonBase-root-MuiListItemButton-root{
+    text-align: center !important;
+  }

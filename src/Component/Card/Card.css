@@ -1,0 +1,78 @@
+:root {
+  --bg-color: #131313;
+  --bg-up-color: #2e343d;
+  --highlight: #6b8afd;
+  --text-color: #a9aeba;
+}
+.img-t {
+  filter: drop-shadow(7px 10px 7px #131313);
+}
+/* #4444dd */
+
+.content {
+  /* background-color: red; */
+  display: flex;
+}
+.card-text {
+  font-size: 45px;
+  color: white;
+  white-space: pre;
+}
+.aunty-image {
+  position: fixed;
+  top: 54% !important;
+  right: 2%;
+  /* border-radius: 35px; */
+}
+.aunty {
+  border: 2.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 26px;
+}
+.text {
+  top: 25%;
+  right: 34.5%;
+  position: fixed;
+}
+.msg-box {
+  position: fixed;
+  right: 25px;
+  width: 355px;
+  top: 12%;
+}
+.cat {
+  filter: drop-shadow(7px 10px 7px #131313);
+}
+.crt {
+  position: fixed;
+  top: 91%;
+  left: 2%;
+}
+.copy-right {
+  font-family: "Poppins", sans-serif;
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: 14px;
+  text-shadow: 2px 2px 8px #131313;
+}
+.term{
+  font-size: 10px;
+  color: var(--text-color);
+  font-family: 'Poppins', sans-serif;
+
+}
+.text-2 {
+  font-family: "Poppins", sans-serif;
+  position: fixed;
+  top: 55%;
+  right: 385px;
+}
+.card-text1 {
+  font-size: 14px;
+  color: var(--text-color);
+  white-space: pre;
+}
+.camera-icon {
+  margin-left: 80px;
+  margin-top: 19px;
+  filter: drop-shadow(7px 10px 7px #131313);
+}

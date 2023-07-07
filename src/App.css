@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-image: linear-gradient(
+    to right top,
+    #b785f5,
+    #8d6dc5,
+    #685595,
+    #473d67,
+    #2a263c,
+    #25223a,
+    #211e37,
+    #1c1a35,
+    #2a285a,
+    #383581,
+    #4744ab,
+    #5852d6
+  );
+}
+
+.App-header {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 40px 0px 40px;
+}
+.main-content {
+  border-radius: 26px;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(14.5px);
+  -webkit-backdrop-filter: blur(14.5px);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  height: fit-content;
+  width: auto;
+}
