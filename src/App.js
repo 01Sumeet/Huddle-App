@@ -12,12 +12,11 @@ function App() {
       <div className="main-content">
         <Router>
           <Routes>
-            {/* <Route path="/" element={<ChatScreen />} /> */}
+            <Route index path="/" element={<Welcome />} />
             <Route element={<PrivateRoute />}>
-              <Route index path="/" element={<Welcome />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signUp" element={<SignUp />} />
-              <Route  element={<ChatScreen />} path="/chat" />
+              <Route element={<ChatScreen />} path="/chat" />
             </Route>
           </Routes>
         </Router>

@@ -9,7 +9,7 @@ import { Form, Formik, ErrorMessage } from "formik";
 import InputField from "../../Assets/InputField";
 import toast, { Toaster } from "react-hot-toast";
 
-const notify = (val) => toast(val);
+
 const SignUp = () => {
     // initial vales for form 
     const initialValues = {
@@ -55,7 +55,7 @@ const SignUp = () => {
         console.log("=====>>>>>>>>", values);
         createUserWithEmailAndPassword(auth, values.email, values.password, values.firstName, values.lastName, values.phoneNumber)
             .then((userCredential) => {
-                notify("Signed In ✅");
+                toast.success("Signed In ✅");
             })
             .catch((error) => {
                 console.log(error);

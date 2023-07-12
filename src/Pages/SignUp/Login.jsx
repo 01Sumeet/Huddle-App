@@ -7,17 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../Firebase/firebaseConfig";
 import { Formik, Form, ErrorMessage } from "formik";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
-// import './login.scss'
-const notify = (val) => toast(val);
-const Login = () => {
 
-const num = [1,2,4,5,6,3]
-  const arr = ["a","c","d","b"]
-const newArr = num.sort()
-const newr = num.toSorted()
-console.log("toSorted",newr)
-console.log("I am sorted",newArr)
+// import './login.scss'
+// const notify = (val) => toast(val);
+const Login = () => {
   const navigate = useNavigate();
   // const [data, setData] = useState({ user: "", password: "" });
   // const handleLogin = (value, field) => {
@@ -42,8 +35,8 @@ console.log("I am sorted",newArr)
     console.log("====>>>>>>>>>", values);
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((user) => {
-        console.log(user.user);
-        notify("Signed In ✅");
+        console.log("🦠", user.user);
+        toast.success("Signed In ✅");
         const createLocalObject = {
           success: true,
           userInfo: user.user,
@@ -53,7 +46,7 @@ console.log("I am sorted",newArr)
       })
       .catch((error) => {
         console.log(error);
-        notify(error.auth);
+        toast.error("User not found");
       });
   };
   return (
