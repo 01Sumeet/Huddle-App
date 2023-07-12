@@ -1,5 +1,8 @@
 # Getting Started with Create React App
 
+![image](https://github.com/01Sumeet/Huddle-App/assets/130349229/d2b06b44-2bf8-40e1-9d96-53d54c1af1da)
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
