@@ -2,21 +2,24 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD4EDllLDnKzUJKtpa2YL19ZY1JBAQumAM",
-  authDomain: "chat-app-6e926.firebaseapp.com",
-  projectId: "chat-app-6e926",
-  storageBucket: "chat-app-6e926.appspot.com",
-  messagingSenderId: "211547167141",
-  appId: "1:211547167141:web:9f3e18e01605083765304c",
-  measurementId: "G-WNLQM1B9JK",
-  databaseURL: "https://chat-app-6e926-default-rtdb.firebaseio.com/",
+  apiKey: "AIzaSyDSegPgvdO1pWru9vKxjFVGMdJk0KcM2S0",
+  authDomain: "huddle-app-58a5f.firebaseapp.com",
+  databaseURL: "https://huddle-app-58a5f-default-rtdb.firebaseio.com",
+  projectId: "huddle-app-58a5f",
+  storageBucket: "huddle-app-58a5f.appspot.com",
+  messagingSenderId: "920216987836",
+  appId: "1:920216987836:web:bb78bfe01e1a3eaa9a88b9",
+  measurementId: "G-V3F82J7RYJ",
 };
-
+// Web@!1234
 //Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore();
 export const auth = getAuth();
 // Initialize Realtime Database and get a reference to the service
-export const database = getDatabase(app);
+export const database = getDatabase();
+// This is for storage
+export const storage = getStorage();

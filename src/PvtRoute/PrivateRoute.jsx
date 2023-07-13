@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 // import { RootState } from "../redux/store/Store";
 export { PrivateRoute };
 export const takeUserInfo = localStorage.getItem("userInfo");

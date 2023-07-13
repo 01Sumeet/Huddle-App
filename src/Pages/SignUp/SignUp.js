@@ -1,18 +1,21 @@
 // import InputField from "../../Assets/InputField";
 import Button from "../../Assets/Button";
 import "./login.css";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../Firebase/firebaseConfig";
+import { createUserWithEmailAndPassword, updateProfile, UserProfile } from "firebase/auth";
+import { auth, db, storage } from "../../Firebase/firebaseConfig";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { Form, Formik, ErrorMessage } from "formik";
 import InputField from "../../Assets/InputField";
 import toast, { Toaster } from "react-hot-toast";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 
 const SignUp = () => {
     // initial vales for form 
     const initialValues = {
+        file: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -22,6 +25,8 @@ const SignUp = () => {
     }
     //yup form Validation
     const FormValues = Yup.object().shape({
+        file: Yup.string()
+            .required("file"),
         firstName: Yup.string()
             .min(2, "Too Short!")
             .max(30, "Too Long!")
@@ -31,6 +36,7 @@ const SignUp = () => {
             .max(30, "Too Long!")
             .required("Required"),
         email: Yup.string().email("Invalid email").required("Required"),
+
         phoneNumber: Yup.string()
             .matches(/^[0-9]{10}$/, 'Invalid mobile number')
             .required('Mobile no is required'),
@@ -50,17 +56,60 @@ const SignUp = () => {
     //         [InputField]: value,
     //     }));
     // };
-    debugger
-    const handleSubmit = (values) => {
-        console.log("=====>>>>>>>>", values);
-        createUserWithEmailAndPassword(auth, values.email, values.password, values.firstName, values.lastName, values.phoneNumber)
-            .then((userCredential) => {
-                toast.success("Signed In ✅");
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("User not found", error.code, "==>🙄", error.message)
-            });
+
+    const handleSubmit = async (values) => {
+        const displayName = `${values.firstName} ${values.lastName}`;
+        const file = values.file;
+        const phoneNumber = values.phoneNumber;
+        console.log("=====>>>>>>>>", file, values);
+        try {
+            const res = await createUserWithEmailAndPassword(auth, values.email, values.password)
+            toast.success("Signed Up ✅");
+            console.log("😎", res.user);
+            //Create a unique image name
+            const date = new Date().getTime();
+            const storageRef = ref(storage, `${displayName + date}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            await uploadTask?.on('state_changed',
+                (snapshot) => {
+                    const progress = (parseInt(snapshot.bytesTransferred) / parseInt(snapshot.totalBytes) * 100);
+                    console.log('Upload is ' + progress + '% done', snapshot.bytesTransferred, snapshot.totalBytes);
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running', progress);
+                            break;
+                    }
+                },
+                (error) => {
+                    console.log("Handle unsuccessful uploads", error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        await updateProfile(res.user, {
+                            displayName, phoneNumber, photoURL: downloadURL
+                        });
+                        const docRef = await setDoc(doc(db, "user", res.user.uid), {
+                            uid: res.user.uid,
+                            displayName, email: values.email, phoneNumber, photoURL: downloadURL
+                        })
+                        // console.log("Document written with ID: ", docRef.id);
+                    });
+                }
+            );
+        } catch (error) {
+            console.log("🔴photo fail", error);
+        }
+        // .then((userCredential) => {
+        //     toast.success("Signed In ✅");
+        // })
+        // .catch((error) => {
+        //     console.log(error);
+        //     alert("User not found", error.code, "==>🙄", error.message)
+        // });
     };
     return (
         <Formik
@@ -81,11 +130,19 @@ const SignUp = () => {
                             <h2 className="heading-text">Sign Up</h2>
                         </div>
                         <div className="char">
-                            <img
+                            <InputField type="file" id="myfile" name="file"
+                                // value={formikProps.values.file}
+                                onChange={(event) => {
+                                    console.log("🤐", event.target.files[0])
+                                    formikProps.setFieldValue("file", event.target.files[0])
+                                }
+                                }
+                            />
+                            {/* <img
                                 className="musician imgg"
                                 src={require("./image/rapper.png")}
                                 alt=""
-                            />
+                            /> */}
                         </div>
                         <div className="social-icons">
                             <span className="icon">
@@ -94,6 +151,7 @@ const SignUp = () => {
                                     src={require("./image/google (1).png")}
                                     alt=""
                                 />
+
                             </span>
                             <span className="icon">
                                 <img
