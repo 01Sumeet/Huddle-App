@@ -1,6 +1,5 @@
 import {
   Box,
-  Card,
   List,
   ListItem,
   ListItemButton,
@@ -9,16 +8,12 @@ import {
   IconButton,
   Paper,
 } from "@mui/material";
-
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { HiChatAlt2, HiFolder, HiOutlineVideoCamera } from "react-icons/hi";
 import { BiMicrophone } from "react-icons/bi";
 import { AiOutlineSend } from "react-icons/ai";
 import { FiSearch } from "react-icons/fi";
-import {
-  BsReverseLayoutSidebarReverse,
- 
-} from "react-icons/bs";
+import { BsReverseLayoutSidebarReverse } from "react-icons/bs";
 import { SiGooglemeet } from "react-icons/si";
 import { IoCalendar, IoSettingsSharp, IoCall } from "react-icons/io5";
 import { MdAnalytics, MdBookmarks } from "react-icons/md";
@@ -26,12 +21,15 @@ import { CgMoreVertical } from "react-icons/cg";
 import { Helmet } from "react-helmet";
 import "./Chat.css";
 import CustomizedInputBase from "../Assets/SearchBar/SearchBar";
-import { getDatabase } from "firebase/database";
-
 import ContactList from "../ChatScreenComponents/ContactList/ContactList";
 import MessageBoxLeft from "../ChatScreenComponents/MessageBox/MessageBoxLeft";
 import MessageBoxRight from "../ChatScreenComponents/MessageBox/MessageBoxRight";
-const database = getDatabase();
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../AuthContext/authContext";
+import useSearch from "../Hooks/SearchHook/useSearch";
+import { collection, getDocs, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../Firebase/firebaseConfig";
+
 // const useStyles = makeStyles((theme) => ({
 //   columnContainer: {
 //     display: "flex",
@@ -46,6 +44,13 @@ const chatColor = "#202329";
 const iconColor = "#848599";
 const textHeading = "#FEFEFF";
 const ChatScreen = () => {
+  const { currentUser } = useContext(AuthContext);
+  const [inputSearch, setInputSearch] = useState("");
+  const [userlist, setUserList] = useState([]);
+  const [filtertedUser, setFilteredUser] = useState([]);
+  //pass the search value inside search box
+  const { foundUser, error, setSearchUser, handleSearch, handleKey } =
+    useSearch(inputSearch);
   const icons = [
     <HiChatAlt2 size={22} />,
     <HiFolder size={20} />,
@@ -53,8 +58,32 @@ const ChatScreen = () => {
     <IoCalendar size={20} />,
     <MdAnalytics size={20} />,
     <MdBookmarks size={20} />,
-    <IoSettingsSharp size={20} className="setting" />,
+    <IoSettingsSharp size={20} style={{ paddingTop: "381%" }} />,
   ];
+
+  useEffect(() => {
+    const fun = async () => {
+      const usersList = [];
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, "=>", doc.data());
+        usersList.push(doc.data());
+      });
+      setUserList(usersList);
+    };
+    fun();
+  }, []);
+
+  const onHandleSearch = () => {
+    // inputSearch
+    let newUserData = userlist.filter((user) => {
+      console.log("filtering users");
+      return user.displayName.toLowerCase().includes(inputSearch.toLowerCase());
+    });
+    setFilteredUser(newUserData);
+  };
+  console.log("newUserData", filtertedUser);
+
   return (
     <>
       <Helmet>
@@ -75,7 +104,7 @@ const ChatScreen = () => {
         }}
       >
         <Box className="Side-bar" sx={{ height: "92vh" }}>
-          <Card
+          <Box
             sx={{
               bgcolor: "transparent",
               height: "96.5%",
@@ -97,7 +126,7 @@ const ChatScreen = () => {
 
             <Avatar
               src={require("../Images/normal Full Logo.png")}
-              sx={{ borderRadius: "12px", ml: "auto", mr: "auto",mt:2 }}
+              sx={{ borderRadius: "12px", ml: "auto", mr: "auto", mt: 2 }}
             />
 
             <List sx={{ fontSize: "11px" }}>
@@ -126,7 +155,7 @@ const ChatScreen = () => {
                 </ListItem>
               ))}
             </List>
-          </Card>
+          </Box>
         </Box>
         <Box
           sx={{
@@ -139,10 +168,22 @@ const ChatScreen = () => {
         >
           <Box sx={{ p: "12px 5px 12px 12px" }}>
             <Box className="chat-list" sx={{ m: 2, bgcolor: "#202329" }}>
-              <CustomizedInputBase placeHolder="Search" width="250px" value />
+              <CustomizedInputBase
+                placeHolder="Search"
+                width="250px"
+                val={inputSearch}
+                onChange={(e) => {
+                  setInputSearch(e.target.value);
+                  onHandleSearch();
+                }}
+                keyBoardEvent={() => handleKey("Enter")}
+                // onClick={handleSearch}
+              />
             </Box>
             <Box>
-              <ContactList />
+              <ContactList
+                data={inputSearch === "" ? userlist : filtertedUser}
+              />
             </Box>
           </Box>
           <Box
@@ -174,7 +215,7 @@ const ChatScreen = () => {
                 }}
               >
                 <Box className="right-message" sx={{ bgcolor: "", mt: 0.5 }}>
-                  <MessageBoxLeft />
+                  <MessageBoxLeft data={userlist} />
                 </Box>
                 <Box className="left-message" sx={{ bgcolor: "", mt: 0.5 }}>
                   <MessageBoxRight />
@@ -192,6 +233,7 @@ const ChatScreen = () => {
                   <CustomizedInputBase
                     width="460px"
                     placeHolder="Type your message here..!!!"
+                    val={inputSearch}
                   />
                   <IconButton sx={{ color: text_color, ml: 1.3 }}>
                     <BiMicrophone />
@@ -246,7 +288,9 @@ const ChatScreen = () => {
             }}
           >
             <Box>
-              <Avatar sx={{ m: "5% 50% 5% 36%" }}></Avatar>
+              <Avatar sx={{ m: "5% 50% 5% 36%" }}>
+                <img src={currentUser?.photoURL} alt="" />
+              </Avatar>
             </Box>
             <Typography
               sx={{
@@ -256,7 +300,7 @@ const ChatScreen = () => {
                 color: textHeading,
               }}
             >
-              Testing User
+              {currentUser?.displayName}
             </Typography>
             <Typography
               component="p"

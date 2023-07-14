@@ -10,7 +10,7 @@ import { FiSearch } from "react-icons/fi";
 // --highlight: #6b8afd;
 // --text-color: #a9aeba;
 
-export default function CustomizedInputBase(prop) {
+const CustomizedInputBase = (prop) => {
   const wid = prop.width;
   return (
     <Paper
@@ -31,7 +31,11 @@ export default function CustomizedInputBase(prop) {
         sx={{ p: "10px 0px 10px 10px", color: "#a9aeba" }}
         aria-label="search"
       >
-        {wid === "460px" ? <ImAttachment size={20} /> : <FiSearch size={21} />}
+        {wid === "460px" ? (
+          <ImAttachment size={20} />
+        ) : (
+          <FiSearch size={21} onClick={prop.onClick} />
+        )}
       </IconButton>
       <InputBase
         sx={{
@@ -44,8 +48,13 @@ export default function CustomizedInputBase(prop) {
           fontFamily: "Poppins, sans-serif",
         }}
         placeholder={prop.placeHolder}
+        value={prop.val}
+        onChange={prop.onChange}
+        onKeyDown={prop.keyBoardEvent}
         inputProps={{ "aria-label": "search google maps" }}
       />
     </Paper>
   );
-}
+};
+
+export default CustomizedInputBase;

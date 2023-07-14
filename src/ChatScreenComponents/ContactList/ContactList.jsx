@@ -3,9 +3,9 @@ import { BsFillPinAngleFill } from "react-icons/bs";
 import { DummyContacts } from "../../Data/Contact";
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
-
-const ContactList = () => {
+const ContactList = (prop) => {
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
+  console.log("Prop", prop);
   return (
     // <>
     //   {DummyContacts?.contacts?.map((contact, index) => (
@@ -16,7 +16,7 @@ const ContactList = () => {
     //   ))}
     // </>
     <>
-      {DummyContacts?.contacts?.map((data, index) => (
+      {prop.data?.map((data, index) => (
         <Paper
           key={index}
           elevation={4}
@@ -29,23 +29,24 @@ const ContactList = () => {
             p: "8px",
             mb: "8px",
             borderRadius: "20px",
-
-            // fontSize: "14px",
           }}
         >
           <Paper
             elevation={3}
             sx={{
-              bgcolor: data.clr,
+              bgcolor: myArray[index],
               borderRadius: "15px",
             }}
           >
             <img
-              src={require("../../Images/computer (1).png")}
+              src={data?.photoURL}
               alt=""
               height="60px"
               width="65px"
-              style={{ marginBottom: "-7px" }}
+              style={{
+                marginBottom: "-7px",
+                filter: "drop-shadow(7px 6px 8px #131313)",
+              }}
             />
           </Paper>
           <Box
@@ -59,7 +60,9 @@ const ContactList = () => {
               ml: "10px",
             }}
           >
-            <Box sx={{ color: textHeading, fontSize: "14px" }}>{data.name}</Box>
+            <Box sx={{ color: textHeading, fontSize: "14px" }}>
+              {data.displayName}
+            </Box>
             <Box sx={{ mt: "4px" }}>
               <Typography
                 sx={{ fontSize: "11px", fontFamily: "Poppins, sans-serif" }}

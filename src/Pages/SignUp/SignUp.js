@@ -92,7 +92,7 @@ const SignUp = () => {
                         await updateProfile(res.user, {
                             displayName, phoneNumber, photoURL: downloadURL
                         });
-                        const docRef = await setDoc(doc(db, "user", res.user.uid), {
+                        const docRef = await setDoc(doc(db, "users", res.user.uid), {
                             uid: res.user.uid,
                             displayName, email: values.email, phoneNumber, photoURL: downloadURL
                         })
