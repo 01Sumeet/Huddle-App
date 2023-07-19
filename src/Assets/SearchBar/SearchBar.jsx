@@ -4,6 +4,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { ImAttachment } from "react-icons/im";
 import { FiSearch } from "react-icons/fi";
+import useSearch from "../../Hooks/SearchHook/useSearch";
 
 // --bg-color: #131313;
 // --bg-up-color: #2e343d;
@@ -11,6 +12,7 @@ import { FiSearch } from "react-icons/fi";
 // --text-color: #a9aeba;
 
 const CustomizedInputBase = (prop) => {
+  const { handleSearch } = useSearch();
   const wid = prop.width;
   return (
     <Paper

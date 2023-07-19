@@ -1,17 +1,15 @@
 import { Box, Paper, Typography } from "@mui/material";
-import { BiCheckDouble } from "react-icons/bi";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-const text_color = "#a9aeba";
-const textHeading = "#FEFEFF";
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
-
-const MessageBoxLeft = () => {
+const MessageBoxLeft = (msg) => {
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
   return (
     <>
-      <Box sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}>
+      <Box
+        sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
+        key={msg.data.time_stamp}
+      >
         <Box
           sx={{
             display: "flex",
@@ -30,7 +28,7 @@ const MessageBoxLeft = () => {
               justifyContent: "center",
               width: "60px",
               height: "60px",
-              m: "13% 8px 0px 2px",
+              m: "auto 8px 0px 2px",
             }}
           >
             <img
@@ -58,7 +56,7 @@ const MessageBoxLeft = () => {
                   color: chat_font,
                 }}
               >
-                Sender
+                {msg.data.userName}
               </Typography>
               <Typography
                 component="span"
@@ -80,10 +78,10 @@ const MessageBoxLeft = () => {
                 lineHeight: "1.2",
                 fontWeight: "300",
                 pt: 1,
-                minHeight: "58px",
+                // minHeight: "58px",
               }}
             >
-              Hii...!!!
+              {msg.data.message}
             </Typography>
             <Box
               sx={{

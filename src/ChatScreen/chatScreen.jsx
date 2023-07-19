@@ -22,20 +22,11 @@ import { Helmet } from "react-helmet";
 import "./Chat.css";
 import CustomizedInputBase from "../Assets/SearchBar/SearchBar";
 import ContactList from "../ChatScreenComponents/ContactList/ContactList";
-import MessageBoxLeft from "../ChatScreenComponents/MessageBox/MessageBoxLeft";
-import MessageBoxRight from "../ChatScreenComponents/MessageBox/MessageBoxRight";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../AuthContext/authContext";
 import useSearch from "../Hooks/SearchHook/useSearch";
-import { collection, getDocs, doc, onSnapshot } from "firebase/firestore";
-import { db } from "../Firebase/firebaseConfig";
+import Chat from "../ChatScreenComponents/ChatLogic";
 
-// const useStyles = makeStyles((theme) => ({
-//   columnContainer: {
-//     display: "flex",
-//     flexDirection: "column",
-//   },
-// }));
 const bg_color = "#131313";
 const bg_up_color = "#2e343d";
 const highlight = "#6b8afd";
@@ -44,45 +35,32 @@ const chatColor = "#202329";
 const iconColor = "#848599";
 const textHeading = "#FEFEFF";
 const ChatScreen = () => {
+  const containerRef = useRef(null);
+  const container = containerRef.current;
+  useEffect(() => {
+    const scrollToLastElement = () => {
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    };
+    scrollToLastElement();
+  }, [container]);
+
   const { currentUser } = useContext(AuthContext);
   const [inputSearch, setInputSearch] = useState("");
-  const [userlist, setUserList] = useState([]);
-  const [filtertedUser, setFilteredUser] = useState([]);
+  const [cont, setAllCont] = useState(false);
   //pass the search value inside search box
-  const { foundUser, error, setSearchUser, handleSearch, handleKey } =
+  const { allUserData, foundUser, handleSearch, handleSelect } =
     useSearch(inputSearch);
   const icons = [
     <HiChatAlt2 size={22} />,
-    <HiFolder size={20} />,
+    <HiFolder size={20} onClick={() => setAllCont(true)} />,
     <SiGooglemeet size={20} />,
     <IoCalendar size={20} />,
     <MdAnalytics size={20} />,
     <MdBookmarks size={20} />,
-    <IoSettingsSharp size={20} style={{ paddingTop: "381%" }} />,
+    <IoSettingsSharp size={20} style={{ paddingTop: "300%" }} />,
   ];
-
-  useEffect(() => {
-    const fun = async () => {
-      const usersList = [];
-      const querySnapshot = await getDocs(collection(db, "users"));
-      querySnapshot.forEach((doc) => {
-        // console.log(doc.id, "=>", doc.data());
-        usersList.push(doc.data());
-      });
-      setUserList(usersList);
-    };
-    fun();
-  }, []);
-
-  const onHandleSearch = () => {
-    // inputSearch
-    let newUserData = userlist.filter((user) => {
-      console.log("filtering users");
-      return user.displayName.toLowerCase().includes(inputSearch.toLowerCase());
-    });
-    setFilteredUser(newUserData);
-  };
-  console.log("newUserData", filtertedUser);
 
   return (
     <>
@@ -110,29 +88,14 @@ const ChatScreen = () => {
               height: "96.5%",
             }}
           >
-            {/* <Typography
-              variant="h1"
-              sx={{
-                fontSize: "25px",
-                color: "#A9AEBA",
-                fontWeight: "600",
-                textAlign: "center",
-                mt: 3,
-              }}
-              gutterBottom
-            >
-              HA
-            </Typography> */}
-
             <Avatar
               src={require("../Images/normal Full Logo.png")}
               sx={{ borderRadius: "12px", ml: "auto", mr: "auto", mt: 2 }}
             />
-
             <List sx={{ fontSize: "11px" }}>
               {[
-                "All Chats",
-                "Work",
+                "Chats",
+                "Contacts",
                 "Meet",
                 "Calendar",
                 "Rating",
@@ -174,15 +137,15 @@ const ChatScreen = () => {
                 val={inputSearch}
                 onChange={(e) => {
                   setInputSearch(e.target.value);
-                  onHandleSearch();
+                  handleSearch();
+                  setAllCont(false);
                 }}
-                keyBoardEvent={() => handleKey("Enter")}
-                // onClick={handleSearch}
               />
             </Box>
             <Box>
               <ContactList
-                data={inputSearch === "" ? userlist : filtertedUser}
+                data={cont ? allUserData : foundUser}
+                onClick={handleSelect}
               />
             </Box>
           </Box>
@@ -205,22 +168,38 @@ const ChatScreen = () => {
                 42 Members, 10 Online
               </Box>
               <Box
+                ref={containerRef}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   minWidth: "600px",
                   position: "fixed",
-                  minHeight: "88%",
+                  maxHeight: "78%",
                   pt: "10px",
+                  overflowY: "scroll",
+                  scrollBehavior: "smooth",
+                  cursor: "auto",
+                  "&::-webkit-scrollbar": {
+                    width: "6px",
+                    height: "6px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    borderRadius: "10px",
+                    background: "rgba(0, 0, 0, 0.1)",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    borderRadius: "10px",
+                    background: "rgba(0,0,0,0.2)",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: highlight,
+                  },
+                  "&::-webkit-scrollbar-thumb:active": {
+                    background: "rgba(0, 0, 0, 0.9)",
+                  },
                 }}
               >
-                <Box className="right-message" sx={{ bgcolor: "", mt: 0.5 }}>
-                  <MessageBoxLeft data={userlist} />
-                </Box>
-                <Box className="left-message" sx={{ bgcolor: "", mt: 0.5 }}>
-                  <MessageBoxRight />
-                </Box>
-
+                <Chat />
                 <Box
                   sx={{
                     position: "fixed",
@@ -233,7 +212,7 @@ const ChatScreen = () => {
                   <CustomizedInputBase
                     width="460px"
                     placeHolder="Type your message here..!!!"
-                    val={inputSearch}
+                    // val={}
                   />
                   <IconButton sx={{ color: text_color, ml: 1.3 }}>
                     <BiMicrophone />

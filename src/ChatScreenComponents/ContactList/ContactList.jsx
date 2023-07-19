@@ -1,23 +1,20 @@
 import { Box, Paper, Typography } from "@mui/material";
 import { BsFillPinAngleFill } from "react-icons/bs";
-import { DummyContacts } from "../../Data/Contact";
+import useSearch from "../../Hooks/SearchHook/useSearch";
+
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
+
 const ContactList = (prop) => {
+  const { handleSelect } = useSearch();
+  console.log(prop);
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
-  console.log("Prop", prop);
+  // console.log(prop);
   return (
-    // <>
-    //   {DummyContacts?.contacts?.map((contact, index) => (
-    //     <p style={{ marginLeft: "30px", color: "white" }} key={index}>
-    //       {contact.name}
-    //myArray[Math.floor(Math.random() * 5)]
-    //     </p>
-    //   ))}
-    // </>
     <>
       {prop.data?.map((data, index) => (
         <Paper
+          onClick={prop.onClick}
           key={index}
           elevation={4}
           sx={{
@@ -29,6 +26,7 @@ const ContactList = (prop) => {
             p: "8px",
             mb: "8px",
             borderRadius: "20px",
+            cursor: "pointer",
           }}
         >
           <Paper
@@ -96,10 +94,11 @@ const ContactList = (prop) => {
             <Box
               sx={{
                 bgcolor: "#6b8afd",
-                height: "20px",
-                width: "20px",
+                height: "19px",
+                width: "19px",
                 borderRadius: "50%",
                 textAlign: "center",
+                verticalAlign: "middle",
                 mb: "4px",
                 color: textHeading,
               }}
@@ -107,7 +106,7 @@ const ContactList = (prop) => {
               <Typography
                 sx={{ fontFamily: "Poppins, sans-serif", fontSize: "14px" }}
               >
-                5
+                {Math.floor(Math.random() * 10) + 1}
               </Typography>
             </Box>
             <Box sx={{ mb: "-4px" }}>

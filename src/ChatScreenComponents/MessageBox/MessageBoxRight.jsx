@@ -1,22 +1,20 @@
 import { Box, Paper, Typography } from "@mui/material";
-import { BiCheckDouble } from "react-icons/bi";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-const text_color = "#a9aeba";
-const textHeading = "#FEFEFF";
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
-
-const MessageBoxRight = () => {
+const MessageBoxRight = (msg) => {
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
   return (
     <>
-      <Box sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}>
+      <Box
+        sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
+        key={msg.data.time_stamp}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
-            justifyContent:"flex-end"
+            justifyContent: "flex-end",
             // justifyContent: "center",
             // alignItems: "center",
           }}
@@ -35,6 +33,17 @@ const MessageBoxRight = () => {
               <Typography
                 component="span"
                 sx={{
+                  fontSize: "16px",
+                  fontFamily: "Poppins, sans-serif",
+                  color: chat_font,
+                }}
+              >
+                {msg.data.userName}
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  float: "right",
                   color: time_stamp,
                   fontFamily: "Poppins,sans-serif",
                   fontSize: "12px",
@@ -42,60 +51,44 @@ const MessageBoxRight = () => {
               >
                 11:03PM
               </Typography>
-              <Typography
-                component="span"
-                sx={{
-                  fontSize: "16px",
-                  fontFamily: "Poppins, sans-serif",
-                  color: chat_font,
-                  float: "right",
-                  ml: 1,
-                }}
-              >
-                Me
-              </Typography>
             </Box>
-            <Box component="div" sx={{ textAlign: "right" }}>
-              <Typography
-                sx={{
-                  fontSize: "13px",
-                  fontFamily: "Poppins, sans-serif",
-                  color: "#cfcfcf",
-                  lineHeight: "1.2",
-                  fontWeight: "300",
-                  pt: 1,
-                  minHeight: "58px",
-                }}
-              >
-                Hello...!!!, What's going on there ?
-              </Typography>
-            </Box>
+            <Typography
+              sx={{
+                fontSize: "13px",
+                fontFamily: "Poppins, sans-serif",
+                color: "#cfcfcf",
+                lineHeight: "1.2",
+                fontWeight: "300",
+                pt: 1,
+                // minHeight: "58px",
+              }}
+            >
+              {msg.data.message}
+            </Typography>
             <Box
               sx={{
-                float: "left",
+                float: "right",
                 color: "#959597",
+
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-              <Typography
-                component="span"
-                sx={{
-                  fontSize: "13px",
-                  fontFamily: "Poppins, sans-serif",
-                  mr: 1,
-                }}
-              >
-                04:39AM
-              </Typography>
               <VisibilityIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />{" "}
               <Typography
                 component="span"
                 sx={{
+                  mr: 1,
                   fontSize: "13px",
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
                 3
+              </Typography>
+              <Typography
+                component="span"
+                sx={{ fontSize: "13px", fontFamily: "Poppins, sans-serif" }}
+              >
+                03:47AM
               </Typography>
             </Box>
           </Paper>
@@ -109,7 +102,8 @@ const MessageBoxRight = () => {
               justifyContent: "center",
               width: "60px",
               height: "60px",
-              m: "13% 1px 0px 8px",
+              m: "auto 1px 0px 8px",
+              // mt: "auto",
             }}
           >
             <img
