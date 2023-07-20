@@ -7,45 +7,50 @@ import {
   serverTimestamp,
   getDoc,
 } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { db } from "../../Firebase/firebaseConfig";
-import { AuthContext } from "../../AuthContext/authContext";
+import { AuthContext } from "../../Context/authContext";
 const useSearch = (serachKeyword) => {
   const { currentUser } = useContext(AuthContext);
-  useEffect(() => {
+  const [inputSearch, setInputSearch] = useState("");
+  /* useEffect(() => {
     handleSearch();
-  }, [serachKeyword]);
-  const [foundUser, setFoundUser] = useState([]);
+  }, [serachKeyword]); */
+
+  // const [foundUser, setFoundUser] = useState([]);
   const [error, setError] = useState(false);
   const [allUserData, setAlluserData] = useState();
-  const handleSearch = async () => {
-    const q = query(collection(db, "users"));
+  const q = query(collection(db, "users"));
+
+  //this snapshot will call db when anything updates in db
+  useMemo(() => {
     try {
-      //this snapshot will call db when anything updates in db
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      onSnapshot(q, (querySnapshot) => {
         const data = [];
         querySnapshot.forEach((doc) => {
           data.push(doc.data());
           setAlluserData(data);
         });
       });
-      let newUserData = allUserData?.filter((user) => {
-        return user.displayName
-          .toLowerCase()
-          .includes(serachKeyword?.toLowerCase());
-      });
-      setFoundUser(newUserData);
     } catch (error) {
       setError(true);
       console.log(error);
     }
-  
-  };
+  }, []);
+  //console.log(serachKeyword);
+  // To search any user from the contacts list
+  const foundUser = useMemo(() => {
+    return (allUserData ?? []).filter((user) => {
+      return user.displayName
+        .toLowerCase()
+        .includes(serachKeyword?.toLowerCase());
+    });
+  }, [serachKeyword, allUserData]);
 
   //
 
   const handleSelect = async () => {
-    console.log(currentUser.uid, "====================", foundUser[0].uid);
+    // console.log(currentUser.uid, "====================", foundUser[0].uid);
     // Check whether the group(chats in firestore) exists, if not create
 
     const combinedUser =
@@ -55,12 +60,10 @@ const useSearch = (serachKeyword) => {
 
     try {
       const res = await getDoc(doc(db, "chats", combinedUser));
-      console.log("res", res, res.exists(), !res.exists());
+      // console.log("res", res, res.exists(), !res.exists());
       if (!res.exists()) {
         // Create a chat in the chats collection
-        await setDoc(doc(db, "chats", combinedUser), { messages: [{
-
-        }] });
+        await setDoc(doc(db, "chats", combinedUser), { messages: [{}] });
 
         // Update userChats for currentUser
         // debugger
@@ -76,7 +79,7 @@ const useSearch = (serachKeyword) => {
         });
 
         // Update userChats for foundUser
-        console.log("foundUser[0].uid)", foundUser[0].uid);
+        //  console.log("foundUser[0].uid)", foundUser[0].uid);
         await setDoc(doc(db, "userChats", foundUser[0].uid), {
           [combinedUser]: {
             userInfo: {
@@ -88,7 +91,7 @@ const useSearch = (serachKeyword) => {
           },
         });
       } else {
-        alert("Already");
+        /* alert("Chat Collection already there in Database"); */
       }
     } catch (error) {
       console.log(error);
@@ -96,6 +99,13 @@ const useSearch = (serachKeyword) => {
     }
   };
 
-  return { allUserData, foundUser, error, handleSearch, handleSelect };
+  return {
+    allUserData,
+    foundUser,
+    error,
+    handleSelect,
+    inputSearch,
+    setInputSearch,
+  };
 };
 export default useSearch;

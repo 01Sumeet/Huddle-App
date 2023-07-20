@@ -3,12 +3,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
 const MessageBoxLeft = (msg) => {
+  console.log("======>>>>>>>>",msg);
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
   return (
     <>
       <Box
         sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
-        key={msg.data.time_stamp}
+        // key={msg.data.time_stamp}
       >
         <Box
           sx={{
@@ -32,7 +33,7 @@ const MessageBoxLeft = (msg) => {
             }}
           >
             <img
-              src={require("../../Images/STK-20211103-WA0045__1_-removebg-preview.png")}
+              src={require("../../Images/STK-20230719-WA0001.jpg")}
               alt=""
               width="60px"
             />
@@ -56,7 +57,7 @@ const MessageBoxLeft = (msg) => {
                   color: chat_font,
                 }}
               >
-                {msg.data.userName}
+                {msg.data.name}
               </Typography>
               <Typography
                 component="span"
@@ -81,7 +82,7 @@ const MessageBoxLeft = (msg) => {
                 // minHeight: "58px",
               }}
             >
-              {msg.data.message}
+              {/* {msg.data.message} */}
             </Typography>
             <Box
               sx={{

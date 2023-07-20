@@ -31,19 +31,23 @@ const Login = () => {
       .min(8, "Password is too short - should be 8 chars minimum.")
       .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
   });
-  const handleSubmit = (values) => {
-    console.log("====>>>>>>>>>", values);
+
+  const handleSubmit = async (values) => {
+    // console.log("====>>>>>>>>>", values);
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((user) => {
         console.log("🦠", user.user);
         toast.success("Signed In ✅");
+
         const createLocalObject = {
           success: true,
           userInfo: user.user,
         };
+
         localStorage.setItem("userInfo", JSON.stringify(createLocalObject));
         navigate("/chat");
       })
+
       .catch((error) => {
         console.log(error);
         toast.error("User not found");

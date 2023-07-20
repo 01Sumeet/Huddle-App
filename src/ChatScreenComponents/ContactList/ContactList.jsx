@@ -1,20 +1,34 @@
 import { Box, Paper, Typography } from "@mui/material";
 import { BsFillPinAngleFill } from "react-icons/bs";
-import useSearch from "../../Hooks/SearchHook/useSearch";
+import { useContactListContext } from "../../Context/ContactListContext";
+import { useUserChat } from "../../Context/UserChatContext";
 
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
-const ContactList = (prop) => {
-  const { handleSelect } = useSearch();
-  console.log(prop);
-  const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
+const ContactCardList = (prop, { showText }) => {
+  const { contactList } = useContactListContext();
+  const { setSender } = useUserChat();
+  const myArray = [
+    "#ffcda5",
+    "#4aac67",
+    "#A9D2FD",
+    "#ffe5a5",
+    "#cd413c",
+    "#ffcda5",
+    "#4aac67",
+    "#A9D2FD",
+  ];
   // console.log(prop);
+  const handleSelect = (uid) => {
+    setSender(uid);
+  };
   return (
     <>
       {prop.data?.map((data, index) => (
         <Paper
-          onClick={prop.onClick}
+          onClick={() => handleSelect(data)}
+          // onClick={() => showText("Hello")}
           key={index}
           elevation={4}
           sx={{
@@ -118,4 +132,4 @@ const ContactList = (prop) => {
     </>
   );
 };
-export default ContactList;
+export default ContactCardList;

@@ -12,7 +12,7 @@ const firebaseConfig = {
   storageBucket: "huddle-app-58a5f.appspot.com",
   messagingSenderId: "920216987836",
   appId: "1:920216987836:web:bb78bfe01e1a3eaa9a88b9",
-  measurementId: "G-V3F82J7RYJ"
+  measurementId: "G-V3F82J7RYJ",
 };
 
 // Web@!1234

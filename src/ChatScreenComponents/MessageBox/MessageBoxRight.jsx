@@ -1,14 +1,19 @@
 import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../../Context/authContext";
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
+
 const MessageBoxRight = (msg) => {
+  const { currentUser } = useContext(AuthContext);
+
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
   return (
     <>
       <Box
         sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
-        key={msg.data.time_stamp}
+        // key={msg.data.time_stamp}
       >
         <Box
           sx={{
@@ -38,7 +43,7 @@ const MessageBoxRight = (msg) => {
                   color: chat_font,
                 }}
               >
-                {msg.data.userName}
+                {/* {msg.data.userName} */}
               </Typography>
               <Typography
                 component="span"
@@ -63,7 +68,7 @@ const MessageBoxRight = (msg) => {
                 // minHeight: "58px",
               }}
             >
-              {msg.data.message}
+              {/* {msg.data.message} */}
             </Typography>
             <Box
               sx={{
@@ -107,8 +112,9 @@ const MessageBoxRight = (msg) => {
             }}
           >
             <img
-              src={require("../../Images/STK-20211103-WA0045__1_-removebg-preview.png")}
-              alt=""
+              // src={require("../../Images/STK-20211103-WA0045__1_-removebg-preview.png")}
+              src={currentUser?.photoURL}
+              alt="Profile"
               width="60px"
             />
           </Box>

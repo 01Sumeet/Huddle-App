@@ -21,11 +21,12 @@ import { CgMoreVertical } from "react-icons/cg";
 import { Helmet } from "react-helmet";
 import "./Chat.css";
 import CustomizedInputBase from "../Assets/SearchBar/SearchBar";
-import ContactList from "../ChatScreenComponents/ContactList/ContactList";
-import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "../AuthContext/authContext";
-import useSearch from "../Hooks/SearchHook/useSearch";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { AuthContext } from "../Context/authContext";
 import Chat from "../ChatScreenComponents/ChatLogic";
+import { useContactListContext } from "../Context/ContactListContext";
+import ContactCardList from "../ChatScreenComponents/ContactList/ContactList";
+import { useUserChat } from "../Context/UserChatContext";
 
 const bg_color = "#131313";
 const bg_up_color = "#2e343d";
@@ -34,9 +35,18 @@ const text_color = "#a9aeba";
 const chatColor = "#202329";
 const iconColor = "#848599";
 const textHeading = "#FEFEFF";
+
 const ChatScreen = () => {
   const containerRef = useRef(null);
+  const { contactList } = useContactListContext();
+  const { sender } = useUserChat();
+  const { currentUser } = useContext(AuthContext);
+  const [inputSearch, setInputSearch] = useState("");
+
+  const [cont, setAllCont] = useState(false);
   const container = containerRef.current;
+
+  // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
       if (container) {
@@ -46,21 +56,27 @@ const ChatScreen = () => {
     scrollToLastElement();
   }, [container]);
 
-  const { currentUser } = useContext(AuthContext);
-  const [inputSearch, setInputSearch] = useState("");
-  const [cont, setAllCont] = useState(false);
-  //pass the search value inside search box
-  const { allUserData, foundUser, handleSearch, handleSelect } =
-    useSearch(inputSearch);
   const icons = [
-    <HiChatAlt2 size={22} />,
+    <HiChatAlt2 size={22} onClick={() => setAllCont(cont ? false : true)} />,
     <HiFolder size={20} onClick={() => setAllCont(true)} />,
     <SiGooglemeet size={20} />,
     <IoCalendar size={20} />,
     <MdAnalytics size={20} />,
     <MdBookmarks size={20} />,
-    <IoSettingsSharp size={20} style={{ paddingTop: "300%" }} />,
+    <IoSettingsSharp size={20} style={{ paddingTop: "auto" }} />,
   ];
+
+  const searchContact = useMemo(() => {
+    const data = contactList?.filter((user) => {
+      return user.displayName
+        .toLowerCase()
+        .includes(inputSearch?.toLowerCase());
+    });
+    return data;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSearch]);
+
+  //
 
   return (
     <>
@@ -137,15 +153,39 @@ const ChatScreen = () => {
                 val={inputSearch}
                 onChange={(e) => {
                   setInputSearch(e.target.value);
-                  handleSearch();
                   setAllCont(false);
                 }}
               />
             </Box>
-            <Box>
-              <ContactList
-                data={cont ? allUserData : foundUser}
-                onClick={handleSelect}
+            <Box
+              sx={{
+                maxHeight: "492.5px",
+                overflowY: "scroll",
+                scrollBehavior: "smooth",
+                cursor: "auto",
+                "&::-webkit-scrollbar": {
+                  width: "6px",
+                  height: "6px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  borderRadius: "10px",
+                  background: "rgba(0, 0, 0, 0.1)",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  borderRadius: "10px",
+                  background: "rgba(0,0,0,0.2)",
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                  background: highlight,
+                },
+                "&::-webkit-scrollbar-thumb:active": {
+                  background: "rgba(0, 0, 0, 0.9)",
+                },
+              }}
+            >
+              <ContactCardList
+                data={inputSearch === "" ? contactList : searchContact}
+                // onClick={handleSelect(data.uid)}
               />
             </Box>
           </Box>
@@ -163,9 +203,10 @@ const ChatScreen = () => {
             }}
           >
             <Box>
-              <Box sx={{ color: textHeading }}>Office Chat</Box>
+              <Box sx={{ color: textHeading }}>{sender?.displayName}</Box>
               <Box component="p" sx={{ fontSize: "10px" }}>
-                42 Members, 10 Online
+                {/* 42 Members, 10 Online */}
+                Online
               </Box>
               <Box
                 ref={containerRef}
@@ -266,20 +307,38 @@ const ChatScreen = () => {
               p: 1,
             }}
           >
-            <Box>
-              <Avatar sx={{ m: "5% 50% 5% 36%" }}>
-                <img src={currentUser?.photoURL} alt="" />
-              </Avatar>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Paper
+                elevation={3}
+                sx={{
+                  // bgcolor: myArray[index],
+                  borderRadius: "50%",
+                  width: "60px",
+                  height: "60px",
+                }}
+              >
+                <img
+                  src={sender?.photoURL}
+                  alt="profile"
+                  height="65px"
+                  width="65px"
+                  style={{
+                    marginBottom: "-7px",
+                    filter: "drop-shadow(7px 6px 8px #131313)",
+                  }}
+                />
+              </Paper>
             </Box>
             <Typography
               sx={{
+                m: "5px 0 5px 0",
                 fontFamily: "Poppins, sans-serif",
                 fontSize: "14px",
                 fontWeight: "500",
                 color: textHeading,
               }}
             >
-              {currentUser?.displayName}
+              {sender?.displayName}
             </Typography>
             <Typography
               component="p"
