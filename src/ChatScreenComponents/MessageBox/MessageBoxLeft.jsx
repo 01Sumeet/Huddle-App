@@ -1,15 +1,28 @@
 import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
+
 const MessageBoxLeft = (msg) => {
-  console.log("======>>>>>>>>",msg);
+  function convertUnixTimestampToTime(unixTimestamp) {
+    const dateObj = new Date(unixTimestamp * 1000);
+    return dateObj.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  const unixTimestamp = msg?.data?.date.seconds;
+  const formattedTime = convertUnixTimestampToTime(unixTimestamp);
+
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
+
   return (
     <>
       <Box
         sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
-        // key={msg.data.time_stamp}
+        key={msg?.data?.id}
       >
         <Box
           sx={{
@@ -32,11 +45,7 @@ const MessageBoxLeft = (msg) => {
               m: "auto 8px 0px 2px",
             }}
           >
-            <img
-              src={require("../../Images/STK-20230719-WA0001.jpg")}
-              alt=""
-              width="60px"
-            />
+            <img src={msg?.sender?.photoURL} alt="" width="60px" />
           </Box>
           <Paper
             elevation={10}
@@ -57,7 +66,7 @@ const MessageBoxLeft = (msg) => {
                   color: chat_font,
                 }}
               >
-                {msg.data.name}
+                {msg?.sender?.displayName}
               </Typography>
               <Typography
                 component="span"
@@ -68,7 +77,7 @@ const MessageBoxLeft = (msg) => {
                   fontSize: "12px",
                 }}
               >
-                11:03PM
+                {formattedTime}
               </Typography>
             </Box>
             <Typography
@@ -82,7 +91,7 @@ const MessageBoxLeft = (msg) => {
                 // minHeight: "58px",
               }}
             >
-              {/* {msg.data.message} */}
+              {msg?.data?.text}
             </Typography>
             <Box
               sx={{

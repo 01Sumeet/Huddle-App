@@ -1,19 +1,30 @@
 import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../Context/authContext";
+
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
 
 const MessageBoxRight = (msg) => {
   const { currentUser } = useContext(AuthContext);
 
+  function convertUnixTimestampToTime(unixTimestamp) {
+    const dateObj = new Date(unixTimestamp * 1000); // Convert seconds to milliseconds
+    return dateObj.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+  const unixTimestamp = msg?.data?.date.seconds;
+  const formattedTime = convertUnixTimestampToTime(unixTimestamp);
+
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
   return (
     <>
       <Box
         sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
-        // key={msg.data.time_stamp}
+        key={msg?.data?.id}
       >
         <Box
           sx={{
@@ -43,7 +54,8 @@ const MessageBoxRight = (msg) => {
                   color: chat_font,
                 }}
               >
-                {/* {msg.data.userName} */}
+                {/* {currentUser?.displayName} */}
+                Me
               </Typography>
               <Typography
                 component="span"
@@ -54,7 +66,7 @@ const MessageBoxRight = (msg) => {
                   fontSize: "12px",
                 }}
               >
-                11:03PM
+                {formattedTime}
               </Typography>
             </Box>
             <Typography
@@ -68,7 +80,7 @@ const MessageBoxRight = (msg) => {
                 // minHeight: "58px",
               }}
             >
-              {/* {msg.data.message} */}
+              {msg?.data?.text}
             </Typography>
             <Box
               sx={{

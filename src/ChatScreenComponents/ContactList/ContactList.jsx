@@ -22,6 +22,7 @@ const ContactCardList = (prop, { showText }) => {
   // console.log(prop);
   const handleSelect = (uid) => {
     setSender(uid);
+    console.log(uid);
   };
   return (
     <>

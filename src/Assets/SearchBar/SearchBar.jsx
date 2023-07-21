@@ -12,7 +12,7 @@ import useSearch from "../../Hooks/SearchHook/useSearch";
 // --text-color: #a9aeba;
 
 const CustomizedInputBase = (prop) => {
-  const { handleSearch } = useSearch();
+
   const wid = prop.width;
   return (
     <Paper

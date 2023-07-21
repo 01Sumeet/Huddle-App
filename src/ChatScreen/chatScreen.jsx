@@ -21,15 +21,26 @@ import { CgMoreVertical } from "react-icons/cg";
 import { Helmet } from "react-helmet";
 import "./Chat.css";
 import CustomizedInputBase from "../Assets/SearchBar/SearchBar";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { AuthContext } from "../Context/authContext";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Timestamp,
+  arrayUnion,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+import { useUserChat } from "../Context/UserChatContext";
+import { db } from "../Firebase/firebaseConfig";
+import { useAuthContext } from "../Context/authContext";
 import Chat from "../ChatScreenComponents/ChatLogic";
 import { useContactListContext } from "../Context/ContactListContext";
 import ContactCardList from "../ChatScreenComponents/ContactList/ContactList";
-import { useUserChat } from "../Context/UserChatContext";
 
 const bg_color = "#131313";
-const bg_up_color = "#2e343d";
+//const bg_up_color = "#2e343d";
 const highlight = "#6b8afd";
 const text_color = "#a9aeba";
 const chatColor = "#202329";
@@ -37,15 +48,17 @@ const iconColor = "#848599";
 const textHeading = "#FEFEFF";
 
 const ChatScreen = () => {
+
   const containerRef = useRef(null);
   const { contactList } = useContactListContext();
-  const { sender } = useUserChat();
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useAuthContext();
+  const { sender, userChat } = useUserChat();
+  const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
 
   const [cont, setAllCont] = useState(false);
   const container = containerRef.current;
-
+  // const Change = userChat[0]?.messages?.length;
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -54,8 +67,17 @@ const ChatScreen = () => {
       }
     };
     scrollToLastElement();
-  }, [container]);
-
+  }, [ container, text]);
+  // serach
+  const searchContact = useMemo(() => {
+    const data = contactList?.filter((user) => {
+      return user.displayName
+        .toLowerCase()
+        .includes(inputSearch?.toLowerCase());
+    });
+    return data;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSearch,]);
   const icons = [
     <HiChatAlt2 size={22} onClick={() => setAllCont(cont ? false : true)} />,
     <HiFolder size={20} onClick={() => setAllCont(true)} />,
@@ -66,18 +88,96 @@ const ChatScreen = () => {
     <IoSettingsSharp size={20} style={{ paddingTop: "auto" }} />,
   ];
 
-  const searchContact = useMemo(() => {
-    const data = contactList?.filter((user) => {
-      return user.displayName
-        .toLowerCase()
-        .includes(inputSearch?.toLowerCase());
-    });
-    return data;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputSearch]);
+  // sent msg
+  const handleSent = async () => {
+    const combinedId =
+      currentUser.uid > sender?.uid
+        ? currentUser.uid + sender?.uid
+        : sender?.uid + currentUser.uid;
+    try {
+      const res = await getDoc(doc(db, "chats", combinedId));
+      if (!res.exists()) {
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+        debugger;
 
-  //
+        // here we update chat between two user
+        await updateDoc(doc(db, "chats", combinedId), {
+          messages: arrayUnion({
+            id: uuidv4(),
+            text: text,
+            senderId: currentUser?.uid,
+            date: Timestamp.now(),
+          }),
+        });
+        setText("");
+        // for recent chats
+        await setDoc(doc(db, "userChats", sender?.uid), {
+          [combinedId + ".userInfo"]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+        // for recent chats
+        await setDoc(doc(db, "userChats", currentUser.uid), {
+          [combinedId + ".userInfo"]: {
+            uid: sender?.uid,
+            displayName: sender.displayName,
+            photoURL: sender.photoURL,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+        // here we update last messages
+        await updateDoc(doc(db, "userChats", currentUser?.uid), {
+          [combinedId]: {
+            lastMessage: text,
+          },
+          date: serverTimestamp(),
+        });
+        // here we update for second user
+        await updateDoc(doc(db, "userChats", sender?.uid), {
+          [combinedId]: {
+            lastMessage: text,
+          },
+          date: serverTimestamp(),
+        });
+      } else {
+        // here we update chat between two user
+        await updateDoc(doc(db, "chats", combinedId), {
+          messages: arrayUnion({
+            id: uuidv4(),
+            text: text,
+            senderId: currentUser.uid,
+            date: Timestamp.now(),
+          }),
+        });
 
+        // here we update last messages
+        await updateDoc(doc(db, "userChats", currentUser?.uid), {
+          [combinedId]: {
+            lastMessage: text,
+          },
+          date: serverTimestamp(),
+        });
+        // here we update for second user
+        await updateDoc(doc(db, "userChats", sender?.uid), {
+          [combinedId]: {
+            lastMessage: text,
+          },
+          date: serverTimestamp(),
+        });
+      }
+      setText("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleKey = (e) => {
+    e.preventDefault();
+    console.log(e);
+    e.code === "Enter" && handleSent();
+  };
   return (
     <>
       <Helmet>
@@ -253,6 +353,9 @@ const ChatScreen = () => {
                   <CustomizedInputBase
                     width="460px"
                     placeHolder="Type your message here..!!!"
+                    val={text}
+                    onChange={(e) => setText(e.target.value)}
+
                     // val={}
                   />
                   <IconButton sx={{ color: text_color, ml: 1.3 }}>
@@ -261,7 +364,11 @@ const ChatScreen = () => {
                   <IconButton sx={{ color: text_color, ml: 0 }}>
                     <HiOutlineVideoCamera />
                   </IconButton>
-                  <IconButton sx={{ color: text_color }}>
+                  <IconButton
+                    sx={{ color: text_color }}
+                    onClick={handleSent}
+                    onKeyDown={(e) => handleKey(e)}
+                  >
                     <AiOutlineSend />
                   </IconButton>
                 </Box>

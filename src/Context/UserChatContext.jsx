@@ -14,18 +14,22 @@ export const UserChatContextprovider = (prop) => {
   const [sender, setSender] = useState([]);
 
   // From this useEffect We will get user Chat data
+  const q = query(collection(db, "chats"));
   useEffect(() => {
     try {
-      const q = query(collection(db, "chats"));
       const chatData = [];
-      onSnapshot(q, (chat) => {
-        chat.forEach((doc) => {
-          chatData.push(doc.data());
-        });
-      });
-      setUserChat(chatData);
+      setUserChat(
+        onSnapshot(q, (chat) => {
+          chat.forEach((doc) => {
+            chatData.push(doc.data());
+            chatData.splice(0, 1);
+            console.log("chatttttt", chatData);
+          });
+        })
+      );
+      // setUserChat(chatData);
 
-      console.log("chatttttt", chatData);
+      console.log("Kahliiii", chatData);
     } catch (error) {
       console.log(error);
     }
