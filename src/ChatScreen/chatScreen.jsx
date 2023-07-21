@@ -48,7 +48,6 @@ const iconColor = "#848599";
 const textHeading = "#FEFEFF";
 
 const ChatScreen = () => {
-
   const containerRef = useRef(null);
   const { contactList } = useContactListContext();
   const { currentUser } = useAuthContext();
@@ -58,7 +57,7 @@ const ChatScreen = () => {
 
   const [cont, setAllCont] = useState(false);
   const container = containerRef.current;
-  // const Change = userChat[0]?.messages?.length;
+  const Change = userChat[0]?.messages?.length;
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -67,7 +66,7 @@ const ChatScreen = () => {
       }
     };
     scrollToLastElement();
-  }, [ container, text]);
+  }, [container, text, Change]);
   // serach
   const searchContact = useMemo(() => {
     const data = contactList?.filter((user) => {
@@ -77,7 +76,7 @@ const ChatScreen = () => {
     });
     return data;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputSearch,]);
+  }, [inputSearch]);
   const icons = [
     <HiChatAlt2 size={22} onClick={() => setAllCont(cont ? false : true)} />,
     <HiFolder size={20} onClick={() => setAllCont(true)} />,

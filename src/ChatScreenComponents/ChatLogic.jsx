@@ -16,7 +16,7 @@ const Chat = () => {
   console.log(userChat);
   return (
     <>
-      {userChat?.messages?.map((msg, index) =>
+      {userChat[0]?.messages?.map((msg, index) =>
         msg.senderId === currentUser?.uid ? (
           <MessageBoxRight data={msg} key={uuidv4()} />
         ) : (

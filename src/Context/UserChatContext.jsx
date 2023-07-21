@@ -18,16 +18,15 @@ export const UserChatContextprovider = (prop) => {
   useEffect(() => {
     try {
       const chatData = [];
-      setUserChat(
-        onSnapshot(q, (chat) => {
-          chat.forEach((doc) => {
-            chatData.push(doc.data());
-            chatData.splice(0, 1);
-            console.log("chatttttt", chatData);
-          });
-        })
-      );
-      // setUserChat(chatData);
+
+      onSnapshot(q, (chat) => {
+        chat.forEach((doc) => {
+          chatData.splice(0, 1);
+          chatData.push(doc.data());
+          console.log("chatttttt", chatData);
+        });
+      });
+       setUserChat(chatData);
 
       console.log("Kahliiii", chatData);
     } catch (error) {
