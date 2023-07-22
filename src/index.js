@@ -6,14 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './Context/authContext';
 import { ContactListContextProvider } from './Context/ContactListContext';
 import { UserChatContextprovider } from './Context/UserChatContext';
+import { ChatContactContextProvider } from './Context/ChatContacContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthContextProvider>
     <ContactListContextProvider>
-      <UserChatContextprovider>
-        <App />
-      </UserChatContextprovider>
+      <ChatContactContextProvider>
+        <UserChatContextprovider>
+          <App />
+        </UserChatContextprovider>
+      </ChatContactContextProvider>
     </ContactListContextProvider>
   </AuthContextProvider>
 );

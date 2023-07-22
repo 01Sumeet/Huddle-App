@@ -16,7 +16,7 @@ const CustomizedInputBase = (prop) => {
   const wid = prop.width;
   return (
     <Paper
-      component="form"
+      
       elevation={10}
       sx={{
         p: "2px 4px",

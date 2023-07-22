@@ -1,6 +1,7 @@
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../Firebase/firebaseConfig";
+import { useAuthContext } from "./authContext";
 
 export const userChatContext = createContext({
   userChat: [],
@@ -12,27 +13,48 @@ export const userChatContext = createContext({
 export const UserChatContextprovider = (prop) => {
   const [userChat, setUserChat] = useState([]);
   const [sender, setSender] = useState([]);
+  const { currentUser } = useAuthContext();
+
+  //
+
+  const combinedId =
+    currentUser?.uid > sender?.uid
+      ? currentUser?.uid + sender?.uid
+      : sender?.uid + currentUser?.uid;
+
+  console.log("greater", currentUser?.uid, sender?.uid);
+  console.log("greater", currentUser?.uid > sender?.uid);
+  console.log("I am sender", sender);
 
   // From this useEffect We will get user Chat data
-  const q = query(collection(db, "chats"));
+
   useEffect(() => {
     try {
-      const chatData = [];
-
-      onSnapshot(q, (chat) => {
-        chat.forEach((doc) => {
-          chatData.splice(0, 1);
-          chatData.push(doc.data());
-          console.log("chatttttt", chatData);
-        });
+      onSnapshot(doc(db, "chats", combinedId), (doc) => {
+        console.log("iammm", combinedId);
+        const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+        console.log(source, " data: ", doc.data());
+        const data = doc.data();
+        setUserChat(data);
       });
-       setUserChat(chatData);
+      // const chatData = [];
 
-      console.log("Kahliiii", chatData);
+      // onSnapshot(q, (chat) => {
+      //   chat.forEach((doc) => {
+      //     chatData.splice(0, 1);
+      //     chatData.push(doc.data());
+      //     console.log("chatttttt", doc);
+      //   });
+      // });
+      // setUserChat(chatData);
+
+      // console.log("Kahliiii", chatData);
     } catch (error) {
       console.log(error);
     }
-  }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sender]);
 
   return (
     <userChatContext.Provider

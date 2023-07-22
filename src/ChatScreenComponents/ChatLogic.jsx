@@ -8,15 +8,15 @@ const Chat = () => {
   const { currentUser } = useAuthContext();
   const { userChat, sender } = useUserChat();
 
-  const combinedId =
-    currentUser.uid > sender?.uid
-      ? currentUser.uid + sender?.uid
-      : sender?.uid + currentUser.uid;
+  // const combinedId =
+  //   currentUser?.uid > sender?.uid
+  //     ? currentUser?.uid + sender?.uid
+  //     : sender?.uid + currentUser?.uid;
 
   console.log(userChat);
   return (
     <>
-      {userChat[0]?.messages?.map((msg, index) =>
+      {userChat?.messages?.map((msg, index) =>
         msg.senderId === currentUser?.uid ? (
           <MessageBoxRight data={msg} key={uuidv4()} />
         ) : (

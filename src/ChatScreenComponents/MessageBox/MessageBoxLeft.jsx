@@ -110,7 +110,7 @@ const MessageBoxLeft = (msg) => {
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-                3
+               {Math.floor(Math.random() * 10) + 1}
               </Typography>
               <Typography
                 component="span"

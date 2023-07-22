@@ -55,9 +55,9 @@ const ChatScreen = () => {
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
 
-  const [cont, setAllCont] = useState(false);
+  const [chats, setChats] = useState(false);
   const container = containerRef.current;
-  const Change = userChat[0]?.messages?.length;
+  const Change = userChat?.messages?.length;
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -78,8 +78,8 @@ const ChatScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSearch]);
   const icons = [
-    <HiChatAlt2 size={22} onClick={() => setAllCont(cont ? false : true)} />,
-    <HiFolder size={20} onClick={() => setAllCont(true)} />,
+    <HiChatAlt2 size={22} onClick={() => setChats(false)} />,
+    <HiFolder size={20} />,
     <SiGooglemeet size={20} />,
     <IoCalendar size={20} />,
     <MdAnalytics size={20} />,
@@ -96,11 +96,11 @@ const ChatScreen = () => {
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
       if (!res.exists()) {
-        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+        setDoc(doc(db, "chats", combinedId), { messages: [] });
         debugger;
 
         // here we update chat between two user
-        await updateDoc(doc(db, "chats", combinedId), {
+        updateDoc(doc(db, "chats", combinedId), {
           messages: arrayUnion({
             id: uuidv4(),
             text: text,
@@ -110,7 +110,7 @@ const ChatScreen = () => {
         });
         setText("");
         // for recent chats
-        await setDoc(doc(db, "userChats", sender?.uid), {
+        setDoc(doc(db, "userChats", sender?.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
@@ -119,7 +119,7 @@ const ChatScreen = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
         // for recent chats
-        await setDoc(doc(db, "userChats", currentUser.uid), {
+        setDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: sender?.uid,
             displayName: sender.displayName,
@@ -128,14 +128,14 @@ const ChatScreen = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
         // here we update last messages
-        await updateDoc(doc(db, "userChats", currentUser?.uid), {
+        updateDoc(doc(db, "userChats", currentUser?.uid), {
           [combinedId]: {
             lastMessage: text,
           },
           date: serverTimestamp(),
         });
         // here we update for second user
-        await updateDoc(doc(db, "userChats", sender?.uid), {
+        updateDoc(doc(db, "userChats", sender?.uid), {
           [combinedId]: {
             lastMessage: text,
           },
@@ -143,7 +143,7 @@ const ChatScreen = () => {
         });
       } else {
         // here we update chat between two user
-        await updateDoc(doc(db, "chats", combinedId), {
+        updateDoc(doc(db, "chats", combinedId), {
           messages: arrayUnion({
             id: uuidv4(),
             text: text,
@@ -153,14 +153,14 @@ const ChatScreen = () => {
         });
 
         // here we update last messages
-        await updateDoc(doc(db, "userChats", currentUser?.uid), {
+        updateDoc(doc(db, "userChats", currentUser?.uid), {
           [combinedId]: {
             lastMessage: text,
           },
           date: serverTimestamp(),
         });
         // here we update for second user
-        await updateDoc(doc(db, "userChats", sender?.uid), {
+        updateDoc(doc(db, "userChats", sender?.uid), {
           [combinedId]: {
             lastMessage: text,
           },
@@ -173,8 +173,6 @@ const ChatScreen = () => {
     }
   };
   const handleKey = (e) => {
-    e.preventDefault();
-    console.log(e);
     e.code === "Enter" && handleSent();
   };
   return (
@@ -244,7 +242,7 @@ const ChatScreen = () => {
             borderRadius: "32px",
           }}
         >
-          <Box sx={{ p: "12px 5px 12px 12px" }}>
+          <Box sx={{ p: "12px 5px 12px 12px", height: "625Px" }}>
             <Box className="chat-list" sx={{ m: 2, bgcolor: "#202329" }}>
               <CustomizedInputBase
                 placeHolder="Search"
@@ -252,13 +250,13 @@ const ChatScreen = () => {
                 val={inputSearch}
                 onChange={(e) => {
                   setInputSearch(e.target.value);
-                  setAllCont(false);
                 }}
               />
             </Box>
             <Box
               sx={{
-                maxHeight: "492.5px",
+                maxHeight: "90%",
+                borderRadius: "4%",
                 overflowY: "scroll",
                 scrollBehavior: "smooth",
                 cursor: "auto",
@@ -268,11 +266,11 @@ const ChatScreen = () => {
                 },
                 "&::-webkit-scrollbar-track": {
                   borderRadius: "10px",
-                  background: "rgba(0, 0, 0, 0.1)",
+                  background: "transparent",
                 },
                 "&::-webkit-scrollbar-thumb": {
                   borderRadius: "10px",
-                  background: "rgba(0,0,0,0.2)",
+                  background: "transparent",
                 },
                 "&::-webkit-scrollbar-thumb:hover": {
                   background: highlight,
@@ -365,7 +363,7 @@ const ChatScreen = () => {
                   </IconButton>
                   <IconButton
                     sx={{ color: text_color }}
-                    onClick={handleSent}
+                    onClick={text === "" ? null : handleSent}
                     onKeyDown={(e) => handleKey(e)}
                   >
                     <AiOutlineSend />
@@ -457,6 +455,35 @@ const ChatScreen = () => {
             >
               Online
             </Typography>
+            <Box
+              sx={{
+                pt: "5px",
+                pb: "3px",
+              }}
+            >
+              <Typography
+                component="p"
+                sx={{
+                  fontSize: "10px",
+                  color: textHeading,
+                  fontWeight: "300",
+                  fontFamily: "Poppins, sans-serif",
+                }}
+              >
+                {sender?.phoneNumber}
+              </Typography>
+              <Typography
+                component="p"
+                sx={{
+                  fontSize: "10px",
+                  color: textHeading,
+                  fontWeight: "300",
+                  fontFamily: "Poppins, sans-serif",
+                }}
+              >
+                {sender?.email}
+              </Typography>
+            </Box>
           </Paper>
         </Box>
       </Box>
