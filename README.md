@@ -1,10 +1,8 @@
 # Getting Started with Create React App
 
 ![image](https://github.com/01Sumeet/Huddle-App/assets/130349229/b1326ac4-6f6f-4d8c-9451-9befde586867)
+![2023-07-22 17 55 37](https://github.com/01Sumeet/Huddle-App/assets/130349229/f5a2bc5e-13bd-446c-ae96-eb510a63b546)
 ![image](https://github.com/01Sumeet/Huddle-App/assets/130349229/2874e90b-d05d-441e-a8ff-a7414489bc8b)
-
-
-
 
 
 
