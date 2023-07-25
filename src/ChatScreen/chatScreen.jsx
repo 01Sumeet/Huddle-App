@@ -1,14 +1,4 @@
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  Avatar,
-  Typography,
-  IconButton,
-  Paper,
-} from "@mui/material";
-import ListItemIcon from "@mui/material/ListItemIcon";
+import { Box, Typography, IconButton, Paper } from "@mui/material";
 import { HiChatAlt2, HiFolder, HiOutlineVideoCamera } from "react-icons/hi";
 import { BiMicrophone } from "react-icons/bi";
 import { AiOutlineSend } from "react-icons/ai";
@@ -38,6 +28,8 @@ import { useAuthContext } from "../Context/authContext";
 import Chat from "../ChatScreenComponents/ChatLogic";
 import { useContactListContext } from "../Context/ContactListContext";
 import ContactCardList from "../ChatScreenComponents/ContactList/ContactList";
+import SideBar from "../Assets/SideBar/SideBar";
+import { useGetUserStatus } from "../Hooks/UserStatus/useGetUserStatus";
 
 const bg_color = "#131313";
 //const bg_up_color = "#2e343d";
@@ -52,12 +44,21 @@ const ChatScreen = () => {
   const { contactList } = useContactListContext();
   const { currentUser } = useAuthContext();
   const { sender, userChat } = useUserChat();
+  const { isOnline } = useGetUserStatus();
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
-
-  const [chats, setChats] = useState(false);
+  const [chats, setChats] = useState(null);
   const container = containerRef.current;
   const Change = userChat?.messages?.length;
+  const ref = useRef(null);
+  // 👇️ check if an element is focused on mount
+  useEffect(() => {
+    if (document.activeElement === ref.current) {
+      console.log("element has focus");
+    } else {
+      console.log("element does NOT have focus");
+    }
+  }, []);
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -66,7 +67,18 @@ const ChatScreen = () => {
       }
     };
     scrollToLastElement();
-  }, [container, text, Change]);
+  }, [container, Change]);
+  console.log(document.activeElement, ref.current);
+  //
+  const esckey = (evt) => {
+    if (evt.keyCode === 27) {
+      alert("Escape");
+    }
+    if (evt.key === "Enter") {
+      handleSent();
+    }
+  };
+  console.log(isOnline);
   // serach
   const searchContact = useMemo(() => {
     const data = contactList?.filter((user) => {
@@ -77,15 +89,10 @@ const ChatScreen = () => {
     return data;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSearch]);
-  const icons = [
-    <HiChatAlt2 size={22} onClick={() => setChats(false)} />,
-    <HiFolder size={20} />,
-    <SiGooglemeet size={20} />,
-    <IoCalendar size={20} />,
-    <MdAnalytics size={20} />,
-    <MdBookmarks size={20} />,
-    <IoSettingsSharp size={20} style={{ paddingTop: "auto" }} />,
-  ];
+
+  const handleAllChatsContact = () => {
+    setChats("AllContact");
+  };
 
   // sent msg
   const handleSent = async () => {
@@ -172,17 +179,19 @@ const ChatScreen = () => {
       console.log(error);
     }
   };
-  const handleKey = (e) => {
-    e.code === "Enter" && handleSent();
-  };
+
   return (
     <>
-      <Helmet>
+      <Helmet >
         <meta charSet="utf-8" />
-        <title>Chat Screen</title>
+        <title >Chat Screen</title>
       </Helmet>
       <Box
+      ref={ref}
         component="div"
+        onKeyDown={(event) => {
+          esckey(event);
+        }}
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -194,45 +203,7 @@ const ChatScreen = () => {
           m: 0,
         }}
       >
-        <Box className="Side-bar" sx={{ height: "92vh" }}>
-          <Box
-            sx={{
-              bgcolor: "transparent",
-              height: "96.5%",
-            }}
-          >
-            <Avatar
-              src={require("../Images/normal Full Logo.png")}
-              sx={{ borderRadius: "12px", ml: "auto", mr: "auto", mt: 2 }}
-            />
-            <List sx={{ fontSize: "11px" }}>
-              {[
-                "Chats",
-                "Contacts",
-                "Meet",
-                "Calendar",
-                "Rating",
-                "Saved",
-                "Setting",
-              ].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ color: text_color }}>
-                  <ListItemButton sx={{ display: "initial" }}>
-                    <ListItemIcon
-                      sx={{
-                        color: text_color,
-                        display: "contents",
-                        textAlign: "center",
-                      }}
-                    >
-                      {icons[index]}
-                      <div>{text}</div>
-                    </ListItemIcon>{" "}
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Box>
+        <SideBar />
         <Box
           sx={{
             bgcolor: chatColor,
@@ -251,6 +222,7 @@ const ChatScreen = () => {
                 onChange={(e) => {
                   setInputSearch(e.target.value);
                 }}
+                keyBoardEvent={(e) => esckey(e)}
               />
             </Box>
             <Box
@@ -289,6 +261,7 @@ const ChatScreen = () => {
           <Box
             className="chat-screen"
             sx={{
+              visibility: sender?.uid?.length > 0 ? "visible" : "hidden",
               color: text_color,
               width: "600px",
               display: "flex",
@@ -337,7 +310,51 @@ const ChatScreen = () => {
                   },
                 }}
               >
-                <Chat />
+                {/* {userChat?.messages?.length < 0 ? ( */}
+                {userChat?.length === 0 ? (
+                  <>
+                    <Box
+                      sx={{
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        width: "fit-content",
+                        background: highlight,
+                        borderRadius: "12px",
+                        m: "10px 15% 0 15%",
+
+                        // border: "1px solid rgba(255, 255, 255, 0.18)",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontFamily: "Poppins, sans-serif",
+                          color: textHeading,
+                          fontWeight: "400",
+                          fontSize: "14px",
+                          m: "2px 16px 2px 16px",
+                          p: "9px",
+                        }}
+                      >
+                        You and{" "}
+                        <span style={{ color: "blue", fontWeight: "600" }}>
+                          {sender?.displayName}
+                        </span>{" "}
+                        don't have any Coversation Yet
+                      </Typography>
+                    </Box>{" "}
+                    <img
+                      src={require("../Images/Young_man.png")}
+                      alt=""
+                      width="590px"
+                    />
+                  </>
+                ) : (
+                  <Chat />
+                )}
+                {/* ) : (
+                  <Chat />
+                )} */}
+
                 <Box
                   sx={{
                     position: "fixed",
@@ -364,7 +381,7 @@ const ChatScreen = () => {
                   <IconButton
                     sx={{ color: text_color }}
                     onClick={text === "" ? null : handleSent}
-                    onKeyDown={(e) => handleKey(e)}
+                    // onKeyDown={(e) => handleKey(e)}
                   >
                     <AiOutlineSend />
                   </IconButton>

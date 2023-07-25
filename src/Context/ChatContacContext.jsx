@@ -17,10 +17,11 @@ export const ChatContactContextProvider = (prop) => {
       var data = [];
       onSnapshot(q, (allChats) => {
         allChats.forEach((doc) => {
-          data.unshift(doc.data());
+          data.push(doc.data());
         });
+        setChatContact(data)
         // data = null;
-        console.log(data);
+        // console.log(data);
         // console.log(typeof data);
       });
     } catch (error) {

@@ -12,11 +12,10 @@ import useSearch from "../../Hooks/SearchHook/useSearch";
 // --text-color: #a9aeba;
 
 const CustomizedInputBase = (prop) => {
-
+  // const { keyBoardEvent } = prop;
   const wid = prop.width;
   return (
     <Paper
-      
       elevation={10}
       sx={{
         p: "2px 4px",
@@ -52,7 +51,7 @@ const CustomizedInputBase = (prop) => {
         placeholder={prop.placeHolder}
         value={prop.val}
         onChange={prop.onChange}
-        onKeyDown={prop.keyBoardEvent}
+        onKeyDown={prop?.keyBoardEvent}
         inputProps={{ "aria-label": "search google maps" }}
       />
     </Paper>

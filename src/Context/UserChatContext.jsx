@@ -22,20 +22,19 @@ export const UserChatContextprovider = (prop) => {
       ? currentUser?.uid + sender?.uid
       : sender?.uid + currentUser?.uid;
 
-  console.log("greater", currentUser?.uid, sender?.uid);
-  console.log("greater", currentUser?.uid > sender?.uid);
-  console.log("I am sender", sender);
-
   // From this useEffect We will get user Chat data
 
   useEffect(() => {
     try {
-      onSnapshot(doc(db, "chats", combinedId), (doc) => {
-        console.log("iammm", combinedId);
+      onSnapshot(doc(db, "chats", `${combinedId}`), (doc) => {
+        // console.log("iammm", combinedId);
         const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-        console.log(source, " data: ", doc.data());
         const data = doc.data();
-        setUserChat(data);
+        if (data !== undefined && data !== "undefined") {
+          setUserChat(data);
+        } else {
+          setUserChat([]);
+        }
       });
       // const chatData = [];
 
@@ -56,6 +55,7 @@ export const UserChatContextprovider = (prop) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sender]);
 
+  // console.log("userChat", userChat);
   return (
     <userChatContext.Provider
       value={{ userChat, setUserChat, sender, setSender }}

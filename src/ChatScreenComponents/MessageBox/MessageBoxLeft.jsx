@@ -24,6 +24,7 @@ const MessageBoxLeft = (msg) => {
         sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
         key={msg?.data?.id}
       >
+        
         <Box
           sx={{
             display: "flex",
