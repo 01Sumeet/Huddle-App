@@ -6,11 +6,19 @@
 
 
 
+
+https://github.com/01Sumeet/Huddle-App/assets/130349229/2ceb09be-4ca4-4c52-b1e4-954320e65367
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+
+https://github.com/01Sumeet/Huddle-App/assets/130349229/43d94e06-c1be-4518-b0af-ad8655c54e23
+
 
 ### `npm start`
 
