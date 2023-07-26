@@ -29,6 +29,8 @@ import SideBar from "../Assets/SideBar/SideBar";
 import { useGetUserStatus } from "../Hooks/UserStatus/useGetUserStatus";
 import SearchBar from "../Assets/SearchBar/SearchBar";
 import ProfileDetails from "../ChatScreenComponents/ProfileDetails/ProfileDetails";
+import MessageInput from "../Assets/MessageInput/MessageInput";
+import AllChatContactList from "../ChatScreenComponents/AllChatContactList/AllChatsContact";
 
 const bg_color = "#131313";
 //const bg_up_color = "#2e343d";
@@ -121,6 +123,7 @@ const ChatScreen = () => {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
             photoURL: currentUser.photoURL,
+            lastMessage: text,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
@@ -220,13 +223,10 @@ const ChatScreen = () => {
           <Box sx={{ p: "12px 5px 12px 12px", height: "625Px" }}>
             <Box className="chat-list" sx={{ m: 2, bgcolor: "#202329" }}>
               <SearchBar
-                placeHolder="Search"
-                width="250px"
                 val={inputSearch}
                 onChange={(e) => {
                   setInputSearch(e.target.value);
                 }}
-                keyBoardEvent={(e) => esckey(e)}
               />
             </Box>
             <Box
@@ -236,6 +236,7 @@ const ChatScreen = () => {
                 overflowY: "scroll",
                 scrollBehavior: "smooth",
                 cursor: "auto",
+                p: "0 5px 0 5px",
                 "&::-webkit-scrollbar": {
                   width: "6px",
                   height: "6px",
@@ -260,6 +261,8 @@ const ChatScreen = () => {
                 data={inputSearch === "" ? contactList : searchContact}
                 // onClick={handleSelect(data.uid)}
               />
+
+              {/* <AllChatContactList /> */}
             </Box>
           </Box>
           <Box
@@ -363,7 +366,7 @@ const ChatScreen = () => {
                     flexDirection: "row",
                   }}
                 >
-                  <SearchBar
+                  <MessageInput
                     width="460px"
                     placeHolder="Type your message here..!!!"
                     val={text}

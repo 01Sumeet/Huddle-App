@@ -95,7 +95,7 @@ const MessageBoxRight = (msg) => {
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-                {Math.floor(Math.random() * 10) + 1}
+                {/* {Math.floor(Math.random() * 10) + 1} */}
               </Typography>
               <Typography
                 component="span"

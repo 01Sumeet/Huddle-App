@@ -1,5 +1,6 @@
 import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
@@ -97,7 +98,8 @@ const MessageBoxLeft = (msg) => {
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-              <VisibilityIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />{" "}
+              {/* <VisibilityIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />{" "} */}
+              <VisibilityOffIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />
               <Typography
                 component="span"
                 sx={{
@@ -106,7 +108,7 @@ const MessageBoxLeft = (msg) => {
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-                {Math.floor(Math.random() * 10) + 1}
+                {/* {Math.floor(Math.random() * 10) + 1} */}
               </Typography>
               <Typography
                 component="span"

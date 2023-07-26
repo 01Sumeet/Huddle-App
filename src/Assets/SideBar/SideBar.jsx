@@ -25,7 +25,13 @@ const SideBar = () => {
         >
           <Avatar
             src={require("../../Images/normal Full Logo.png")}
-            sx={{ borderRadius: "12px", ml: "auto", mr: "auto", mt: 2 }}
+            sx={{
+              borderRadius: "12px",
+              ml: "auto",
+              mr: "auto",
+              mt: 2,
+              filter: "drop-shadow(1px 3px 10px #572ae7)",
+            }}
           />
           <List sx={{ fontSize: "11px", height: "89%" }}>
             <ListItem

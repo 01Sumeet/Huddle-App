@@ -1,9 +1,18 @@
+import * as React from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
+import { ImAttachment } from "react-icons/im";
 import { FiSearch } from "react-icons/fi";
 
-const SearchBar = (prop) => {
+// --bg-color: #131313;
+// --bg-up-color: #2e343d;
+// --highlight: #6b8afd;
+// --text-color: #a9aeba;
+
+const MessageInput = (prop) => {
+  // const { keyBoardEvent } = prop;
+
   return (
     <Paper
       elevation={10}
@@ -11,7 +20,7 @@ const SearchBar = (prop) => {
         p: "2px 4px",
         display: "flex",
         alignItems: "center",
-        width: "250px",
+        width: "460px",
         borderRadius: "15px",
         bgcolor: "#2e343d",
         fontFamily: "Poppins, sans-serif",
@@ -22,7 +31,7 @@ const SearchBar = (prop) => {
         sx={{ p: "10px 0px 10px 10px", color: "#a9aeba" }}
         aria-label="search"
       >
-        <FiSearch size={21} />
+        <ImAttachment size={20} />
       </IconButton>
       <InputBase
         sx={{
@@ -31,15 +40,19 @@ const SearchBar = (prop) => {
           p: "0px 10px 0 1px",
           color: "#a9aeba",
           outline: "none",
-          border: "none",
+          border: "0px",
           fontFamily: "Poppins, sans-serif",
+          ":focus": {
+            border: "none",
+          },
         }}
-        placeholder="Search Contacts"
+        placeholder={prop.placeHolder}
         value={prop.val}
         onChange={prop.onChange}
+        onKeyDown={prop.placeHolder !== "Search" && prop?.keyBoardEvent}
       />
     </Paper>
   );
 };
 
-export default SearchBar;
+export default MessageInput;

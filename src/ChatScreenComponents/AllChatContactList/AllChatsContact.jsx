@@ -2,11 +2,13 @@ import { Box, Paper, Typography } from "@mui/material";
 import { BsFillPinAngleFill } from "react-icons/bs";
 import { useUserChat } from "../../Context/UserChatContext";
 import { useState } from "react";
+import { useAllChatsContact } from "../../Context/ChatContacContext";
 
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
-const ContactCardList = (prop) => {
+const AllChatContactList = (prop) => {
+  const { chatContact } = useAllChatsContact();
   const { setSender } = useUserChat();
   const [selectedContact, setSelectedContact] = useState();
   const myArray = [
@@ -19,7 +21,7 @@ const ContactCardList = (prop) => {
     "#4aac67",
     "#A9D2FD",
   ];
-  // console.log(prop);
+  console.log("Chatss",chatContact);
   const handleSelect = (uid) => {
     setSender(uid);
     // console.log(uid);
@@ -148,4 +150,4 @@ const ContactCardList = (prop) => {
     </>
   );
 };
-export default ContactCardList;
+export default AllChatContactList;
