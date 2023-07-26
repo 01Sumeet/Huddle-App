@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../Firebase/firebaseConfig";
-import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 export const chatContactContext = createContext({
   chatContact: [],
@@ -19,7 +19,7 @@ export const ChatContactContextProvider = (prop) => {
         allChats.forEach((doc) => {
           data.push(doc.data());
         });
-        setChatContact(data)
+        setChatContact(data);
         // data = null;
         // console.log(data);
         // console.log(typeof data);

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-// import { RootState } from "../redux/store/Store";
+
 export { PrivateRoute };
 export const takeUserInfo = localStorage.getItem("userInfo");
 export const getUserInfo = JSON.parse(takeUserInfo);
@@ -23,13 +23,3 @@ function PrivateRoute() {
   //authorized so return child components
   return <Outlet />;
 }
-// import { Outlet, Navigate } from "react-router-dom";
-// const PrivateRoutes = () => {
-// let auth = {'token':false}
-//   const takeUserInfo = localStorage.getItem("userInfo");
-//   const getUserInfo = JSON.parse(takeUserInfo);
-//   console.log("getUserInfo?.success", getUserInfo?.success);
-//   return getUserInfo?.success ? <Outlet /> : <Navigate to="/" />;
-// };
-
-// export default PrivateRoutes;

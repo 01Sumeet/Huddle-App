@@ -8,10 +8,13 @@ export const signInWithGoogle = () => {
 
 // <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
 export function SignOut() {
-    return auth.currentUser && (
-      <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
+  return (
+    auth.currentUser && (
+      <button className="sign-out" onClick={() => auth.signOut()}>
+        Sign Out
+      </button>
     )
-  }
+  );
+}
 
-  //
-
+//

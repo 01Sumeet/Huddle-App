@@ -21,7 +21,12 @@ export default function MoreOption() {
     <Box sx={{ height: 0, transform: "translateZ(0px)", flexGrow: 1 }}>
       <SpeedDial
         ariaLabel="SpeedDial openIcon example"
-        sx={{ bgcolor:"transparent", position: "absolute", bottom: "-29px", right:"-27px" }}
+        sx={{
+          bgcolor: "transparent",
+          position: "absolute",
+          bottom: "-29px",
+          right: "-27px",
+        }}
         icon={<ImAttachment openIcon={<EditIcon />} />}
       >
         {actions.map((action) => (

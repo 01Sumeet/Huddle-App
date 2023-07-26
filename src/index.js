@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AuthContextProvider } from './Context/authContext';
+import { AuthContextProvider } from './Context/AuthContext';
 import { ContactListContextProvider } from './Context/ContactListContext';
 import { UserChatContextprovider } from './Context/UserChatContext';
 import { ChatContactContextProvider } from './Context/ChatContacContext';

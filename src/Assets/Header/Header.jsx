@@ -19,8 +19,10 @@ const Header = () => {
           <Link to="/">Help Center</Link>
           <Link to="/">Blog</Link>
           <Link to="/">For Business</Link>
-          <Link to="/login" className="a login-btn">LogIn</Link>
-          <button className="a signup-btn" >Sign Up</button>
+          <Link to="/login" className="a login-btn">
+            LogIn
+          </Link>
+          <button className="a signup-btn">Sign Up</button>
         </span>
       </div>
     </div>

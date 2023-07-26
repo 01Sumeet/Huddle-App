@@ -5,17 +5,16 @@ const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
 
 const MessageBoxLeft = (msg) => {
-  function convertUnixTimestampToTime(unixTimestamp) {
+  const convertUnixTimestampToTime = (unixTimestamp) => {
     const dateObj = new Date(unixTimestamp * 1000);
     return dateObj.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
-  }
+  };
 
   const unixTimestamp = msg?.data?.date.seconds;
   const formattedTime = convertUnixTimestampToTime(unixTimestamp);
-
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
 
   return (
@@ -24,13 +23,10 @@ const MessageBoxLeft = (msg) => {
         sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
         key={msg?.data?.id}
       >
-        
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
-            // justifyContent: "center",
-            // alignItems: "center",
           }}
         >
           <Box
@@ -98,7 +94,6 @@ const MessageBoxLeft = (msg) => {
               sx={{
                 float: "right",
                 color: "#959597",
-
                 fontFamily: "Poppins, sans-serif",
               }}
             >
@@ -111,7 +106,7 @@ const MessageBoxLeft = (msg) => {
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-               {Math.floor(Math.random() * 10) + 1}
+                {Math.floor(Math.random() * 10) + 1}
               </Typography>
               <Typography
                 component="span"

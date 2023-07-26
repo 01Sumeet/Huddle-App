@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { db } from "../../Firebase/firebaseConfig";
-import { AuthContext } from "../../Context/authContext";
+import { AuthContext } from "../../Context/AuthContext";
 const useSearch = (serachKeyword) => {
   const { currentUser } = useContext(AuthContext);
   const [inputSearch, setInputSearch] = useState("");

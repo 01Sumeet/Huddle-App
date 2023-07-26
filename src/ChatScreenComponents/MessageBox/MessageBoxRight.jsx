@@ -1,21 +1,20 @@
 import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useContext } from "react";
-import { AuthContext } from "../../Context/authContext";
+import { AuthContext } from "../../Context/AuthContext";
 
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
 
 const MessageBoxRight = (msg) => {
   const { currentUser } = useContext(AuthContext);
-
-  function convertUnixTimestampToTime(unixTimestamp) {
+  const convertUnixTimestampToTime = (unixTimestamp) => {
     const dateObj = new Date(unixTimestamp * 1000); // Convert seconds to milliseconds
     return dateObj.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
-  }
+  };
   const unixTimestamp = msg?.data?.date.seconds;
   const formattedTime = convertUnixTimestampToTime(unixTimestamp);
 
@@ -31,8 +30,6 @@ const MessageBoxRight = (msg) => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-end",
-            // justifyContent: "center",
-            // alignItems: "center",
           }}
         >
           <Paper
@@ -77,7 +74,6 @@ const MessageBoxRight = (msg) => {
                 lineHeight: "1.2",
                 fontWeight: "300",
                 pt: 1,
-                // minHeight: "58px",
               }}
             >
               {msg?.data?.text}
@@ -120,15 +116,9 @@ const MessageBoxRight = (msg) => {
               width: "60px",
               height: "60px",
               m: "auto 1px 0px 8px",
-              // mt: "auto",
             }}
           >
-            <img
-              // src={require("../../Images/STK-20211103-WA0045__1_-removebg-preview.png")}
-              src={currentUser?.photoURL}
-              alt="Profile"
-              width="60px"
-            />
+            <img src={currentUser?.photoURL} alt="Profile" width="60px" />
           </Box>
         </Box>
       </Box>

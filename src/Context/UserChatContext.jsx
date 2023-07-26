@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../Firebase/firebaseConfig";
-import { useAuthContext } from "./authContext";
+import { useAuthContext } from "./AuthContext";
 
 export const userChatContext = createContext({
   userChat: [],
@@ -23,7 +23,6 @@ export const UserChatContextprovider = (prop) => {
       : sender?.uid + currentUser?.uid;
 
   // From this useEffect We will get user Chat data
-
   useEffect(() => {
     try {
       onSnapshot(doc(db, "chats", `${combinedId}`), (doc) => {
@@ -37,7 +36,6 @@ export const UserChatContextprovider = (prop) => {
         }
       });
       // const chatData = [];
-
       // onSnapshot(q, (chat) => {
       //   chat.forEach((doc) => {
       //     chatData.splice(0, 1);
@@ -46,7 +44,6 @@ export const UserChatContextprovider = (prop) => {
       //   });
       // });
       // setUserChat(chatData);
-
       // console.log("Kahliiii", chatData);
     } catch (error) {
       console.log(error);

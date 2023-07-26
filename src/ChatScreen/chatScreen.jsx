@@ -1,16 +1,13 @@
-import { Box, Typography, IconButton, Paper } from "@mui/material";
-import { HiChatAlt2, HiFolder, HiOutlineVideoCamera } from "react-icons/hi";
+import { Box, Typography, IconButton } from "@mui/material";
+import { HiOutlineVideoCamera } from "react-icons/hi";
 import { BiMicrophone } from "react-icons/bi";
 import { AiOutlineSend } from "react-icons/ai";
 import { FiSearch } from "react-icons/fi";
 import { BsReverseLayoutSidebarReverse } from "react-icons/bs";
-import { SiGooglemeet } from "react-icons/si";
-import { IoCalendar, IoSettingsSharp, IoCall } from "react-icons/io5";
-import { MdAnalytics, MdBookmarks } from "react-icons/md";
+import { IoCall } from "react-icons/io5";
 import { CgMoreVertical } from "react-icons/cg";
 import { Helmet } from "react-helmet";
 import "./Chat.css";
-import CustomizedInputBase from "../Assets/SearchBar/SearchBar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Timestamp,
@@ -24,12 +21,14 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { useUserChat } from "../Context/UserChatContext";
 import { db } from "../Firebase/firebaseConfig";
-import { useAuthContext } from "../Context/authContext";
+import { useAuthContext } from "../Context/AuthContext";
 import Chat from "../ChatScreenComponents/ChatLogic";
 import { useContactListContext } from "../Context/ContactListContext";
 import ContactCardList from "../ChatScreenComponents/ContactList/ContactList";
 import SideBar from "../Assets/SideBar/SideBar";
 import { useGetUserStatus } from "../Hooks/UserStatus/useGetUserStatus";
+import SearchBar from "../Assets/SearchBar/SearchBar";
+import ProfileDetails from "../ChatScreenComponents/ProfileDetails/ProfileDetails";
 
 const bg_color = "#131313";
 //const bg_up_color = "#2e343d";
@@ -47,10 +46,10 @@ const ChatScreen = () => {
   const { isOnline } = useGetUserStatus();
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
-  const [chats, setChats] = useState(null);
   const container = containerRef.current;
   const Change = userChat?.messages?.length;
   const ref = useRef(null);
+
   // 👇️ check if an element is focused on mount
   useEffect(() => {
     if (document.activeElement === ref.current) {
@@ -59,6 +58,7 @@ const ChatScreen = () => {
       console.log("element does NOT have focus");
     }
   }, []);
+
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -68,8 +68,8 @@ const ChatScreen = () => {
     };
     scrollToLastElement();
   }, [container, Change]);
-  console.log(document.activeElement, ref.current);
-  //
+
+  //on hitting Enter & Escape Key to send message and go back to main screen
   const esckey = (evt) => {
     if (evt.keyCode === 27) {
       alert("Escape");
@@ -78,8 +78,8 @@ const ChatScreen = () => {
       handleSent();
     }
   };
-  console.log(isOnline);
-  // serach
+
+  // This will show search contact from all user database
   const searchContact = useMemo(() => {
     const data = contactList?.filter((user) => {
       return user.displayName
@@ -90,21 +90,17 @@ const ChatScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSearch]);
 
-  const handleAllChatsContact = () => {
-    setChats("AllContact");
-  };
-
-  // sent msg
+  // this will create new user caht in db and update message
   const handleSent = async () => {
     const combinedId =
       currentUser.uid > sender?.uid
         ? currentUser.uid + sender?.uid
         : sender?.uid + currentUser.uid;
+
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
       if (!res.exists()) {
         setDoc(doc(db, "chats", combinedId), { messages: [] });
-        debugger;
 
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
@@ -116,6 +112,7 @@ const ChatScreen = () => {
           }),
         });
         setText("");
+
         // for recent chats
         setDoc(doc(db, "userChats", sender?.uid), {
           [combinedId + ".userInfo"]: {
@@ -125,6 +122,7 @@ const ChatScreen = () => {
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
+
         // for recent chats
         setDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
@@ -134,6 +132,7 @@ const ChatScreen = () => {
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
+
         // here we update last messages
         updateDoc(doc(db, "userChats", currentUser?.uid), {
           [combinedId]: {
@@ -141,6 +140,7 @@ const ChatScreen = () => {
           },
           date: serverTimestamp(),
         });
+
         // here we update for second user
         updateDoc(doc(db, "userChats", sender?.uid), {
           [combinedId]: {
@@ -166,6 +166,7 @@ const ChatScreen = () => {
           },
           date: serverTimestamp(),
         });
+
         // here we update for second user
         updateDoc(doc(db, "userChats", sender?.uid), {
           [combinedId]: {
@@ -174,6 +175,7 @@ const ChatScreen = () => {
           date: serverTimestamp(),
         });
       }
+
       setText("");
     } catch (error) {
       console.log(error);
@@ -182,12 +184,12 @@ const ChatScreen = () => {
 
   return (
     <>
-      <Helmet >
+      <Helmet>
         <meta charSet="utf-8" />
-        <title >Chat Screen</title>
+        <title>Chat Screen</title>
       </Helmet>
       <Box
-      ref={ref}
+        ref={ref}
         component="div"
         onKeyDown={(event) => {
           esckey(event);
@@ -215,7 +217,7 @@ const ChatScreen = () => {
         >
           <Box sx={{ p: "12px 5px 12px 12px", height: "625Px" }}>
             <Box className="chat-list" sx={{ m: 2, bgcolor: "#202329" }}>
-              <CustomizedInputBase
+              <SearchBar
                 placeHolder="Search"
                 width="250px"
                 val={inputSearch}
@@ -321,8 +323,6 @@ const ChatScreen = () => {
                         background: highlight,
                         borderRadius: "12px",
                         m: "10px 15% 0 15%",
-
-                        // border: "1px solid rgba(255, 255, 255, 0.18)",
                       }}
                     >
                       <Typography
@@ -351,10 +351,6 @@ const ChatScreen = () => {
                 ) : (
                   <Chat />
                 )}
-                {/* ) : (
-                  <Chat />
-                )} */}
-
                 <Box
                   sx={{
                     position: "fixed",
@@ -364,13 +360,11 @@ const ChatScreen = () => {
                     flexDirection: "row",
                   }}
                 >
-                  <CustomizedInputBase
+                  <SearchBar
                     width="460px"
                     placeHolder="Type your message here..!!!"
                     val={text}
                     onChange={(e) => setText(e.target.value)}
-
-                    // val={}
                   />
                   <IconButton sx={{ color: text_color, ml: 1.3 }}>
                     <BiMicrophone />
@@ -404,105 +398,10 @@ const ChatScreen = () => {
             </Box>
           </Box>
         </Box>
-        <Box
-          sx={{
-            width: "150px",
-            display: "flex",
-            justifyContent: "flex-start",
-            flexDirection: "column",
-            p: "18px 10px 17px 15px",
-          }}
-          className="Profile-detail"
-        >
-          <Box sx={{ color: textHeading, fontWeight: "300", fontSize: "14px" }}>
-            <Box>Profile Details</Box>
-          </Box>
-          <Paper
-            elevation={10}
-            sx={{
-              height: "fit-content",
-              bgcolor: highlight,
-              textAlign: "center",
-              m: "12px 0px 10px 0px ",
-              borderRadius: "12px",
-              p: 1,
-            }}
-          >
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Paper
-                elevation={3}
-                sx={{
-                  // bgcolor: myArray[index],
-                  borderRadius: "50%",
-                  width: "60px",
-                  height: "60px",
-                }}
-              >
-                <img
-                  src={sender?.photoURL}
-                  alt="profile"
-                  height="65px"
-                  width="65px"
-                  style={{
-                    marginBottom: "-7px",
-                    filter: "drop-shadow(7px 6px 8px #131313)",
-                  }}
-                />
-              </Paper>
-            </Box>
-            <Typography
-              sx={{
-                m: "5px 0 5px 0",
-                fontFamily: "Poppins, sans-serif",
-                fontSize: "14px",
-                fontWeight: "500",
-                color: textHeading,
-              }}
-            >
-              {sender?.displayName}
-            </Typography>
-            <Typography
-              component="p"
-              sx={{
-                fontSize: "9px",
-                color: textHeading,
-                fontWeight: "300",
-                fontFamily: "Poppins, sans-serif",
-              }}
-            >
-              Online
-            </Typography>
-            <Box
-              sx={{
-                pt: "5px",
-                pb: "3px",
-              }}
-            >
-              <Typography
-                component="p"
-                sx={{
-                  fontSize: "10px",
-                  color: textHeading,
-                  fontWeight: "300",
-                  fontFamily: "Poppins, sans-serif",
-                }}
-              >
-                {sender?.phoneNumber}
-              </Typography>
-              <Typography
-                component="p"
-                sx={{
-                  fontSize: "10px",
-                  color: textHeading,
-                  fontWeight: "300",
-                  fontFamily: "Poppins, sans-serif",
-                }}
-              >
-                {sender?.email}
-              </Typography>
-            </Box>
-          </Paper>
-        </Box>
+        {/*Profile Details Card */}
+        <ProfileDetails
+          sender={sender?.uid?.length > 0 ? sender : currentUser}
+        />
       </Box>
     </>
   );

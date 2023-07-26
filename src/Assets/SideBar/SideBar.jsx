@@ -6,8 +6,6 @@ import { MdAnalytics, MdBookmarks } from "react-icons/md";
 import ListItemIcon from "@mui/material/ListItemIcon";
 const text_color = "#a9aeba";
 
-
-
 const SideBar = () => {
   return (
     <>

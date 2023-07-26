@@ -1,5 +1,5 @@
 import { useUserChat } from "../Context/UserChatContext";
-import { useAuthContext } from "../Context/authContext";
+import { useAuthContext } from "../Context/AuthContext";
 import MessageBoxLeft from "./MessageBox/MessageBoxLeft";
 import MessageBoxRight from "./MessageBox/MessageBoxRight";
 import { v4 as uuidv4 } from "uuid";

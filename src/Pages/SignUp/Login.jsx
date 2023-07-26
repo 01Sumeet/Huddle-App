@@ -11,15 +11,8 @@ import toast, { Toaster } from "react-hot-toast";
 // import './login.scss'
 // const notify = (val) => toast(val);
 const Login = () => {
+  
   const navigate = useNavigate();
-  // const [data, setData] = useState({ user: "", password: "" });
-  // const handleLogin = (value, field) => {
-  //   setData((prevState) => ({
-  //     ...prevState,
-  //     [field]: value,
-  //   }));
-  // };
-
   const initialValue = {
     email: "",
     password: "",

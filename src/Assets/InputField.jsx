@@ -10,7 +10,6 @@ const InputField = (props) => {
       id={props.name}
       onChange={props.onChange}
       autoComplete="off"
- 
     />
   );
 };
