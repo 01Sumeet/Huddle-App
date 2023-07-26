@@ -75,7 +75,9 @@ const ChatScreen = () => {
       alert("Escape");
     }
     if (evt.key === "Enter") {
-      handleSent();
+      if (text !== "") {
+        handleSent();
+      }
     }
   };
 
@@ -319,10 +321,10 @@ const ChatScreen = () => {
                       sx={{
                         textAlign: "center",
                         verticalAlign: "middle",
-                        width: "fit-content",
-                        background: highlight,
+                        maxWidth: "80%",
+                        background: "#6b8afdd4",
                         borderRadius: "12px",
-                        m: "10px 15% 0 15%",
+                        m: "10px 0% 0 10%",
                       }}
                     >
                       <Typography
@@ -330,7 +332,7 @@ const ChatScreen = () => {
                           fontFamily: "Poppins, sans-serif",
                           color: textHeading,
                           fontWeight: "400",
-                          fontSize: "14px",
+                          fontSize: "12px",
                           m: "2px 16px 2px 16px",
                           p: "9px",
                         }}
@@ -339,7 +341,8 @@ const ChatScreen = () => {
                         <span style={{ color: "blue", fontWeight: "600" }}>
                           {sender?.displayName}
                         </span>{" "}
-                        don't have any Coversation Yet
+                        don't have any Coversation Yet. To Start Conversation
+                        Say Hiii! 🙋‍♀️
                       </Typography>
                     </Box>{" "}
                     <img
