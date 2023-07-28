@@ -5,13 +5,18 @@ import { IoCalendar, IoSettingsSharp } from "react-icons/io5";
 import { MdAnalytics, MdBookmarks } from "react-icons/md";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelectedMenu } from "../../Context/SelectedMenu";
 const text_color = "#a9aeba";
 
 const SideBar = () => {
-  const [selectedButton, setSelectedButton] = useState("button1");
+  const { setSelectedMenu, selectedMenu } = useSelectedMenu();
+  const [selectedButton, setSelectedButton] = useState("chats");
+  const navigate = useNavigate();
 
-  const handleButtonClick = (button) => {
+  const handleButtonClick = (button, takeRoute) => {
     setSelectedButton(button);
+    setSelectedMenu(button);
   };
 
   return (
@@ -35,14 +40,14 @@ const SideBar = () => {
           />
           <List sx={{ fontSize: "11px", height: "89%" }}>
             <ListItem
-              onClick={() => handleButtonClick("button1")}
-              sx={{ bgcolor: selectedButton === "button1" ? "#6b8afd29" : "" }}
+              onClick={() => handleButtonClick("chats")}
+              sx={{ bgcolor: selectedButton === "chats" ? "#6b8afd29" : "" }}
               disablePadding
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button1" ? "#fff" : text_color,
+                    color: selectedButton === "chats" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
@@ -53,14 +58,14 @@ const SideBar = () => {
               </ListItemButton>
             </ListItem>
             <ListItem
-              onClick={() => handleButtonClick("button2")}
-              sx={{ bgcolor: selectedButton === "button2" ? "#6b8afd29" : "" }}
+              onClick={() => handleButtonClick("contact")}
+              sx={{ bgcolor: selectedButton === "contact" ? "#6b8afd29" : "" }}
               disablePadding
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button2" ? "#fff" : text_color,
+                    color: selectedButton === "contact" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
@@ -71,9 +76,9 @@ const SideBar = () => {
               </ListItemButton>
             </ListItem>
             <ListItem
-              onClick={() => handleButtonClick("button3")}
+              onClick={() => handleButtonClick("meet")}
               disablePadding
-              sx={{ bgcolor: selectedButton === "button3" ? "#6b8afd29" : "" }}
+              sx={{ bgcolor: selectedButton === "meet" ? "#6b8afd29" : "" }}
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
@@ -89,14 +94,14 @@ const SideBar = () => {
               </ListItemButton>
             </ListItem>
             <ListItem
-              onClick={() => handleButtonClick("button4")}
+              onClick={() => handleButtonClick("meet")}
               disablePadding
-              sx={{ bgcolor: selectedButton === "button4" ? "#6b8afd29" : "" }}
+              sx={{ bgcolor: selectedButton === "meet" ? "#6b8afd29" : "" }}
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button4" ? "#fff" : text_color,
+                    color: selectedButton === "meet" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
@@ -107,14 +112,14 @@ const SideBar = () => {
               </ListItemButton>
             </ListItem>
             <ListItem
-              onClick={() => handleButtonClick("button5")}
+              onClick={() => handleButtonClick("calendar")}
               disablePadding
-              sx={{ bgcolor: selectedButton === "button5" ? "#6b8afd29" : "" }}
+              sx={{ bgcolor: selectedButton === "calendar" ? "#6b8afd29" : "" }}
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button5" ? "#fff" : text_color,
+                    color: selectedButton === "calendar" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
@@ -125,14 +130,14 @@ const SideBar = () => {
               </ListItemButton>
             </ListItem>
             <ListItem
-              onClick={() => handleButtonClick("button6")}
+              onClick={() => handleButtonClick("rating")}
               disablePadding
-              sx={{ bgcolor: selectedButton === "button6" ? "#6b8afd29" : "" }}
+              sx={{ bgcolor: selectedButton === "rating" ? "#6b8afd29" : "" }}
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button6" ? "#fff" : text_color,
+                    color: selectedButton === "rating" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
@@ -143,14 +148,14 @@ const SideBar = () => {
               </ListItemButton>
             </ListItem>
             <ListItem
-              onClick={() => handleButtonClick("button7")}
+              onClick={() => handleButtonClick("saved")}
               disablePadding
-              sx={{ bgcolor: selectedButton === "button7" ? "#6b8afd29" : "" }}
+              sx={{ bgcolor: selectedButton === "saved" ? "#6b8afd29" : "" }}
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button7" ? "#fff" : text_color,
+                    color: selectedButton === "saved" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}

@@ -19,18 +19,21 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { useUserChat } from "../Context/UserChatContext";
-import { db } from "../Firebase/firebaseConfig";
-import { useAuthContext } from "../Context/AuthContext";
-import Chat from "../ChatScreenComponents/ChatLogic";
-import { useContactListContext } from "../Context/ContactListContext";
-import ContactCardList from "../ChatScreenComponents/ContactList/ContactList";
-import SideBar from "../Assets/SideBar/SideBar";
-import { useGetUserStatus } from "../Hooks/UserStatus/useGetUserStatus";
-import SearchBar from "../Assets/SearchBar/SearchBar";
-import ProfileDetails from "../ChatScreenComponents/ProfileDetails/ProfileDetails";
-import MessageInput from "../Assets/MessageInput/MessageInput";
-import AllChatContactList from "../ChatScreenComponents/AllChatContactList/AllChatsContact";
+import { useUserChat } from "../../Context/UserChatContext";
+import { db } from "../../Firebase/firebaseConfig";
+import { useAuthContext } from "../../Context/AuthContext";
+import Chat from "../../ChatScreenComponents/MessageBox/ChatLogic";
+import { useContactListContext } from "../../Context/ContactListContext";
+import ContactCardList from "../../ChatScreenComponents/ContactList/ContactList";
+import SideBar from "../../Assets/SideBar/SideBar";
+import { useGetUserStatus } from "../../Hooks/UserStatus/useGetUserStatus";
+import SearchBar from "../../Assets/SearchBar/SearchBar";
+import ProfileDetails from "../../ChatScreenComponents/ProfileDetails/ProfileDetails";
+import MessageInput from "../../Assets/MessageInput/MessageInput";
+import AllChatContactList from "../../ChatScreenComponents/AllChatContactList/AllChatsContact";
+import MoreOption from "../../ChatScreenComponents/MoreOption/MoreOption";
+import { useAllChatsContact } from "../../Context/ChatContacContext";
+import { useSelectedMenu } from "../../Context/SelectedMenu";
 
 const bg_color = "#131313";
 //const bg_up_color = "#2e343d";
@@ -45,13 +48,14 @@ const ChatScreen = () => {
   const { contactList } = useContactListContext();
   const { currentUser } = useAuthContext();
   const { sender, userChat } = useUserChat();
+  const { chatContact } = useAllChatsContact();
+  const { selectedMenu } = useSelectedMenu();
   const { isOnline } = useGetUserStatus();
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
   const container = containerRef.current;
   const Change = userChat?.messages?.length;
   const ref = useRef(null);
-
   // 👇️ check if an element is focused on mount
   useEffect(() => {
     if (document.activeElement === ref.current) {
@@ -61,6 +65,7 @@ const ChatScreen = () => {
     }
   }, []);
 
+  console.log("chatco", sender);
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -119,39 +124,38 @@ const ChatScreen = () => {
 
         // for recent chats
         setDoc(doc(db, "userChats", sender?.uid), {
-          [combinedId + ".userInfo"]: {
+          [combinedId + ".date"]: serverTimestamp(),
+          userInfo: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
             photoURL: currentUser.photoURL,
-            lastMessage: text,
           },
-          [combinedId + ".date"]: serverTimestamp(),
         });
 
         // for recent chats
         setDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedId + ".userInfo"]: {
+          [combinedId + ".date"]: serverTimestamp(),
+          userInfo: {
             uid: sender?.uid,
             displayName: sender.displayName,
             photoURL: sender.photoURL,
           },
-          [combinedId + ".date"]: serverTimestamp(),
         });
 
         // here we update last messages
         updateDoc(doc(db, "userChats", currentUser?.uid), {
-          [combinedId]: {
+          date: serverTimestamp(),
+          userLastMsg: {
             lastMessage: text,
           },
-          date: serverTimestamp(),
         });
 
         // here we update for second user
         updateDoc(doc(db, "userChats", sender?.uid), {
-          [combinedId]: {
+          date: serverTimestamp(),
+          userLastMsg: {
             lastMessage: text,
           },
-          date: serverTimestamp(),
         });
       } else {
         // here we update chat between two user
@@ -163,21 +167,20 @@ const ChatScreen = () => {
             date: Timestamp.now(),
           }),
         });
-
         // here we update last messages
         updateDoc(doc(db, "userChats", currentUser?.uid), {
-          [combinedId]: {
+          date: serverTimestamp(),
+          userLastMsg: {
             lastMessage: text,
           },
-          date: serverTimestamp(),
         });
 
         // here we update for second user
         updateDoc(doc(db, "userChats", sender?.uid), {
-          [combinedId]: {
+          date: serverTimestamp(),
+          userLastMsg: {
             lastMessage: text,
           },
-          date: serverTimestamp(),
         });
       }
 
@@ -258,7 +261,15 @@ const ChatScreen = () => {
               }}
             >
               <ContactCardList
-                data={inputSearch === "" ? contactList : searchContact}
+                //  data={inputSearch === "" ? contactList : searchContact}
+                showChatOnly={selectedMenu}
+                data={
+                  inputSearch === ""
+                    ? selectedMenu === "contact"
+                      ? contactList
+                      : chatContact
+                    : searchContact
+                }
                 // onClick={handleSelect(data.uid)}
               />
 
@@ -349,7 +360,7 @@ const ChatScreen = () => {
                       </Typography>
                     </Box>{" "}
                     <img
-                      src={require("../Images/Young_man.png")}
+                      src={require("../../Images/Young_man.png")}
                       alt=""
                       width="590px"
                     />
@@ -364,15 +375,16 @@ const ChatScreen = () => {
                     width: "600px",
                     display: "flex",
                     flexDirection: "row",
+                    height: "46px",
                   }}
                 >
                   <MessageInput
-                    width="460px"
                     placeHolder="Type your message here..!!!"
                     val={text}
                     onChange={(e) => setText(e.target.value)}
                   />
-                  <IconButton sx={{ color: text_color, ml: 1.3 }}>
+                  <MoreOption />
+                  <IconButton sx={{ color: text_color, ml: "79px" }}>
                     <BiMicrophone />
                   </IconButton>
                   <IconButton sx={{ color: text_color, ml: 0 }}>

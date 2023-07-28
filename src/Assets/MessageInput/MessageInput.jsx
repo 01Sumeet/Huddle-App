@@ -2,8 +2,7 @@ import * as React from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
-import { ImAttachment } from "react-icons/im";
-import { FiSearch } from "react-icons/fi";
+import { BsFillEmojiSmileFill } from "react-icons/bs";
 
 // --bg-color: #131313;
 // --bg-up-color: #2e343d;
@@ -20,7 +19,7 @@ const MessageInput = (prop) => {
         p: "2px 4px",
         display: "flex",
         alignItems: "center",
-        width: "460px",
+        width: "394px",
         borderRadius: "15px",
         bgcolor: "#2e343d",
         fontFamily: "Poppins, sans-serif",
@@ -31,8 +30,9 @@ const MessageInput = (prop) => {
         sx={{ p: "10px 0px 10px 10px", color: "#a9aeba" }}
         aria-label="search"
       >
-        <ImAttachment size={20} />
+        <BsFillEmojiSmileFill size={20} />
       </IconButton>
+     
       <InputBase
         sx={{
           ml: 1,
@@ -42,6 +42,7 @@ const MessageInput = (prop) => {
           outline: "none",
           border: "0px",
           fontFamily: "Poppins, sans-serif",
+          // border: "1px solid red",
           ":focus": {
             border: "none",
           },
@@ -49,9 +50,10 @@ const MessageInput = (prop) => {
         placeholder={prop.placeHolder}
         value={prop.val}
         onChange={prop.onChange}
-        onKeyDown={prop.placeHolder !== "Search" && prop?.keyBoardEvent}
       />
+      
     </Paper>
+    
   );
 };
 

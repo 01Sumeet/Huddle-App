@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
 import { db } from "../Firebase/firebaseConfig";
@@ -13,18 +13,28 @@ export const ContactListContextProvider = (prop) => {
 
   // here we fetch data from database for users Contact lists
   useEffect(() => {
-    try {
-      const q = query(collection(db, "users"));
-      onSnapshot(q, (userContacts) => {
-        const data = [];
-        userContacts.forEach((doc) => {
-          data.push(doc.data());
-        });
+    const q = query(collection(db, "users"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      try {
+        const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
+        const data = snapshot.docs.map((doc) => doc.data());
         setContactList(data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    // try {
+    //   const q = query(collection(db, "users"));
+    //   onSnapshot(q, (userContacts) => {
+    //     const data = [];
+    //     userContacts.forEach((doc) => {
+    //       data.push(doc.data());
+    //     });
+    //     setContactList(data);
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

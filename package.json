@@ -33,6 +33,9 @@
   "@testing-library/user-event": "^13.5.0",
   
     
+  "axios": "^1.4.0",
+  
+    
   "firebase": "^9.23.0",
   
     
@@ -43,6 +46,9 @@
   
     
   "react": "^18.2.0",
+  
+    
+  "react-axios": "^2.0.6",
   
     
   "react-dom": "^18.2.0",

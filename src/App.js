@@ -3,7 +3,7 @@ import Login from "./Pages/SignUp/Login";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Welcome from './Pages/WelcomeScreen/WelcomePage'
 import SignUp from "./Pages/SignUp/SignUp";
-import ChatScreen from "./ChatScreen/chatScreen";
+import ChatScreen from './Pages/ChatScreen/chatScreen.jsx'
 import { PrivateRoute } from "./PvtRoute/PrivateRoute";
 
 function App() {

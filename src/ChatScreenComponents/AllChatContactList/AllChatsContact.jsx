@@ -20,8 +20,16 @@ const AllChatContactList = (prop) => {
     "#ffcda5",
     "#4aac67",
     "#A9D2FD",
+    "#ffcda5",
+    "#4aac67",
+    "#A9D2FD",
+    "#ffe5a5",
+    "#cd413c",
+    "#ffcda5",
+    "#4aac67",
+    "#A9D2FD",
   ];
-  console.log("Chatss",chatContact);
+  console.log("Chatss", chatContact);
   const handleSelect = (uid) => {
     setSender(uid);
     // console.log(uid);

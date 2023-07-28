@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../Firebase/firebaseConfig";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
 
 export const chatContactContext = createContext({
   chatContact: [],
@@ -12,21 +12,18 @@ export const ChatContactContextProvider = (prop) => {
   const [chatContact, setChatContact] = useState([]);
 
   useEffect(() => {
-    try {
-      const q = query(collection(db, "userChats"));
-      var data = [];
-      onSnapshot(q, (allChats) => {
-        allChats.forEach((doc) => {
-          data.push(doc.data());
-        });
+    const q = query(collection(db, "userChats"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      try {
+        const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
+        const data = snapshot.docs.map((doc) => doc.data());
         setChatContact(data);
-        // data = null;
-        // console.log(data);
-        // console.log(typeof data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+        console.log("valuee", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error appropriately, e.g., show an error message to the user.
+      }
+    });
   }, []);
 
   return (
