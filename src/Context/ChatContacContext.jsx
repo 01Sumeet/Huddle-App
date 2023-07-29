@@ -12,7 +12,7 @@ export const ChatContactContextProvider = (prop) => {
   const [chatContact, setChatContact] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "userChats"));
+    const q = query(collection(db, "userChatsData"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       try {
         const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";

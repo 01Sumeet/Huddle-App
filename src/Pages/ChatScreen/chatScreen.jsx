@@ -49,7 +49,7 @@ const ChatScreen = () => {
   const { currentUser } = useAuthContext();
   const { sender, userChat } = useUserChat();
   const { chatContact } = useAllChatsContact();
-  const { selectedMenu } = useSelectedMenu();
+  const { selectedMenu, imgFile, setImgFile } = useSelectedMenu();
   const { isOnline } = useGetUserStatus();
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
@@ -57,15 +57,15 @@ const ChatScreen = () => {
   const Change = userChat?.messages?.length;
   const ref = useRef(null);
   // 👇️ check if an element is focused on mount
-  useEffect(() => {
-    if (document.activeElement === ref.current) {
-      console.log("element has focus");
-    } else {
-      console.log("element does NOT have focus");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (document.activeElement === ref.current) {
+  //     console.log("element has focus");
+  //   } else {
+  //     console.log("element does NOT have focus");
+  //   }
+  // }, []);
 
-  console.log("chatco", sender);
+  console.log("chatco", imgFile);
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -110,7 +110,7 @@ const ChatScreen = () => {
       const res = await getDoc(doc(db, "chats", combinedId));
       if (!res.exists()) {
         setDoc(doc(db, "chats", combinedId), { messages: [] });
-
+        debugger;
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
           messages: arrayUnion({
@@ -120,70 +120,132 @@ const ChatScreen = () => {
             date: Timestamp.now(),
           }),
         });
+
+        // for recent chats
+        setDoc(doc(db, "userChatsData", sender?.uid), {
+          chatList: [],
+        });
+        //  Here we update the last message of the current user in the sender list
+        await updateDoc(doc(db, "userChatsData", sender?.uid), {
+          chatList: arrayUnion({
+            [currentUser?.uid]: {
+              senderUID: currentUser?.uid,
+              displayName: currentUser?.displayName,
+              photoURL: currentUser?.photoURL,
+              lastMessage: text,
+              timestamp: Timestamp.now(),
+              unreadCount: 3,
+            },
+          }),
+        });
+
+        setDoc(doc(db, "userChatsData", currentUser?.uid), {
+          chatList: [],
+        });
+        // Here we Update the last message of the Sender in the Current user's Chat List
+        await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
+          chatList: arrayUnion({
+            [sender?.uid]: {
+              id: uuidv4(),
+              senderUID: sender?.uid,
+              displayName: sender?.displayName,
+              photoURL: sender?.photoURL, // Fix: corrected the property name
+              lastMessage: text,
+              timestamp: Timestamp.now(),
+              unreadCount: 3,
+            },
+          }),
+        });
+
+        // // for recent chats
+        // await setDoc(doc(db, "userChats", currentUser.uid), {
+        //   [combinedId + ".date"]: serverTimestamp(),
+        //   userInfo: {
+        //     uid: sender?.uid,
+        //     displayName: sender.displayName,
+        //     photoURL: sender.photoURL,
+        //   },
+        // });
         setText("");
-
-        // for recent chats
-        setDoc(doc(db, "userChats", sender?.uid), {
-          [combinedId + ".date"]: serverTimestamp(),
-          userInfo: {
-            uid: currentUser.uid,
-            displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
-          },
-        });
-
-        // for recent chats
-        setDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedId + ".date"]: serverTimestamp(),
-          userInfo: {
-            uid: sender?.uid,
-            displayName: sender.displayName,
-            photoURL: sender.photoURL,
-          },
-        });
-
         // here we update last messages
-        updateDoc(doc(db, "userChats", currentUser?.uid), {
-          date: serverTimestamp(),
-          userLastMsg: {
-            lastMessage: text,
-          },
-        });
+        // updateDoc(doc(db, "userChats", currentUser?.uid), {
+        //   date: serverTimestamp(),
+        //   userLastMsg: {
+        //     lastMessage: text,
+        //   },
+        // });
 
-        // here we update for second user
-        updateDoc(doc(db, "userChats", sender?.uid), {
-          date: serverTimestamp(),
-          userLastMsg: {
-            lastMessage: text,
-          },
-        });
+        // // here we update for second user
+        // updateDoc(doc(db, "userChats", sender?.uid), {
+        //   date: serverTimestamp(),
+        //   userLastMsg: {
+        //     lastMessage: text,
+        //   },
+        // });
       } else {
+        debugger;
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
           messages: arrayUnion({
             id: uuidv4(),
             text: text,
-            senderId: currentUser.uid,
+            senderId: currentUser?.uid,
             date: Timestamp.now(),
           }),
         });
-        // here we update last messages
-        updateDoc(doc(db, "userChats", currentUser?.uid), {
-          date: serverTimestamp(),
-          userLastMsg: {
-            lastMessage: text,
-          },
-        });
 
-        // here we update for second user
-        updateDoc(doc(db, "userChats", sender?.uid), {
-          date: serverTimestamp(),
-          userLastMsg: {
-            lastMessage: text,
-          },
-        });
+        //  Here we update last message of current user in sender list
+        // await updateDoc(doc(db, "userChatsData", sender?.uid), {
+        //   chatList: arrayUnion({
+        //     id: uuidv4(),
+        //     senderUID: currentUser?.uid,
+        //     displayName: currentUser?.displayName,
+        //     photoURL: currentUser?.photoURL,
+        //     lastMessage: text,
+        //     timestamp: Timestamp.now(),
+        //     unreadCount: 3,
+        //   }),
+        // });
+
+        // // Here we Update last message of Sender in Current user Chat List
+        // await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
+        //   chatList: arrayUnion({
+        //     id: uuidv4(),
+        //     senderUID: sender?.uid,
+        //     displayName: sender?.displayName,
+        //     photoURLL: sender?.photoURL,
+        //     lastMessage: text,
+        //     timestamp: Timestamp.now(),
+        //     unreadCount: 3,
+        //   }),
+        // });
+
+        // // here we update chat between two user
+        // updateDoc(doc(db, "chats", combinedId), {
+        //   messages: arrayUnion({
+        //     id: uuidv4(),
+        //     text: imgFile,
+        //     senderId: currentUser.uid,
+        //     date: Timestamp.now(),
+        //   }),
+        // });
+        // // here we update last messages
+        // updateDoc(doc(db, "userChats", currentUser?.uid), {
+        //   date: serverTimestamp(),
+        //   userLastMsg: {
+        //     lastMessage: text,
+        //   },
+        // });
+
+        // // here we update for second user
+        // updateDoc(doc(db, "userChats", sender?.uid), {
+        //   date: serverTimestamp(),
+        //   userLastMsg: {
+        //     lastMessage: text,
+        //   },
+        // });
       }
-
+      setImgFile(null);
       setText("");
     } catch (error) {
       console.log(error);

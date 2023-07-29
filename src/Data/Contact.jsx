@@ -212,3 +212,65 @@ export const DummyContacts = {
     // Continue adding more lines of conversation...
   ],
 };
+
+const daata = {
+  chats: {
+    "UUID-1": {
+      sender: "user1",
+      recv: "user2",
+      messages: [
+        {
+          sender: "user1",
+          content: "hi",
+          type: "text",
+        },
+        {
+          sender: "user1",
+          content: "look at this image",
+          media: "https://example.com/image.png",
+          type: "image",
+        },
+      ],
+      lastMessage: {
+        sender: "user1",
+        content: "look at this image",
+        media: "https://example.com/image.png",
+        type: "image",
+      },
+      created_at: 12316546789,
+    },
+    "UUID-2": {
+      sender: "user2",
+      recv: "user3",
+      messages: [],
+      created_at: 12316546789,
+    },
+  },
+};
+
+const val = {
+  chatList: [
+    {
+      id: "chat_1",
+      name: "John Doe",
+      lastMessage: "Hey, how are you?",
+      timestamp: "2023-07-28T12:30:00Z",
+      unreadCount: 3,
+    },
+    {
+      id: "chat_2",
+      name: "Jane Smith",
+      lastMessage: "Sure, I'll be there on time!",
+      timestamp: "2023-07-27T18:45:00Z",
+      unreadCount: 0,
+    },
+    {
+      id: "chat_3",
+      name: "Bob Johnson",
+      lastMessage: "👍",
+      timestamp: "2023-07-26T09:15:00Z",
+      unreadCount: 1,
+    },
+    // Additional chat items go here
+  ],
+};
