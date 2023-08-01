@@ -18,7 +18,7 @@ export const AuthContextProvider = (prop) => {
     });
 
     unSub();
-  }, []);
+  }, [currentUser?.uid]);
 
   return (
     <AuthContext.Provider

@@ -2,12 +2,15 @@ import { Box, Paper, Typography } from "@mui/material";
 import { BsFillPinAngleFill } from "react-icons/bs";
 import { useUserChat } from "../../Context/UserChatContext";
 import { useState } from "react";
+import { useContactListContext } from "../../Context/ContactListContext";
 
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
 const ContactCardList = (prop) => {
+  console.log("Propp", prop?.data);
   const { setSender } = useUserChat();
+  const { contactList } = useContactListContext();
   const [selectedContact, setSelectedContact] = useState();
   const myArray = [
     "#ffcda5",
@@ -29,30 +32,40 @@ const ContactCardList = (prop) => {
   ];
   // console.log(prop);
   const handleSelect = (uid) => {
-    setSender(uid);
+    const data = contactList?.filter((user) => user.uid === uid);
+    if (prop?.showChatOnly === "chats") {
+      setSender(data[0]);
+    } else {
+      setSender(uid);
+    }
     // console.log(uid);
   };
 
   // To make card selected
   const handleSelectedContact = (uid) => {
     setSelectedContact(uid);
-    console.log("val", uid);
-    // alert(uid);
+    console.log("selected", uid);
+    console.log("change", selectedContact);
+
+    // console.log("click", uid, "=====>>>", selectedContact);
   };
 
-  console.log("prop.data", prop.data);
+  // console.log(
+  //   "prop.data",
+  //   prop.data?.map((x) => x.uid)
+  // );
   return (
     <>
       {prop?.showChatOnly === "chats"
-        ? prop.data?.map((data, index) => (
+        ? prop?.data?.map((data, index) => (
             <Paper
               onClick={() => {
-                handleSelect(data.userInfo);
-                handleSelectedContact(data.userInfo.uid);
+                handleSelect(data?.senderUid);
+                handleSelectedContact(data?.senderUid);
               }}
               // onClick={() => showText("Hello")}
               key={index}
-              // elevation={4}
+              elevation={4}
               sx={{
                 bgcolor: "#2e343d",
                 display: "flex",
@@ -64,7 +77,7 @@ const ContactCardList = (prop) => {
                 borderRadius: "20px",
                 cursor: "pointer",
                 boxShadow:
-                  selectedContact === data?.userInfo?.uid
+                  selectedContact === data?.senderUid
                     ? "0px 5px 12px -1px #5f81ffdb, 0px 72px 10px 0px rgba(0,0,0,0.14), 0px 7px 10px 6px rgba(0,0,0,0.12)"
                     : " 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);",
               }}
@@ -77,7 +90,7 @@ const ContactCardList = (prop) => {
                 }}
               >
                 <img
-                  src={data?.userInfo?.photoURL}
+                  // src={data?.photoURL}
                   alt=""
                   height="60px"
                   width="65px"
@@ -99,14 +112,14 @@ const ContactCardList = (prop) => {
                 }}
               >
                 <Box sx={{ color: textHeading, fontSize: "14px" }}>
-                  {data?.userInfo?.displayName}
+                  {/* {data?.displayName} */}
                 </Box>
                 <Box sx={{ mt: "4px" }}>
                   <Typography
                     sx={{ fontSize: "11px", fontFamily: "Poppins, sans-serif" }}
                   >
                     {" "}
-                    {data?.userLastMsg?.lastMessage}
+                    {data?.lastMessage}
                   </Typography>
                 </Box>
               </Box>
@@ -156,7 +169,7 @@ const ContactCardList = (prop) => {
               </Box>
             </Paper>
           ))
-        : prop.data?.map((data, index) => (
+        : prop?.data?.map((data, index) => (
             <Paper
               onClick={() => {
                 handleSelect(data);

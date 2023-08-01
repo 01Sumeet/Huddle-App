@@ -18,10 +18,14 @@ export const ContactListContextProvider = (prop) => {
       try {
         const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
         const data = snapshot.docs.map((doc) => doc.data());
+        
         setContactList(data);
       } catch (error) {
         console.log(error);
       }
+      return () => {
+        unsubscribe();
+      };
     });
     // try {
     //   const q = query(collection(db, "users"));

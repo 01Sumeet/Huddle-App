@@ -13,7 +13,7 @@ const Chat = () => {
   //     ? currentUser?.uid + sender?.uid
   //     : sender?.uid + currentUser?.uid;
 
-  console.log(userChat);
+  console.log("Chatsss", userChat);
   return (
     <>
       {userChat?.messages?.map((msg, index) =>

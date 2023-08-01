@@ -8,7 +8,7 @@ export const SelectedMenuContext = createContext({
 });
 
 export const SelectedMenuContextProvider = (prop) => {
-  const [selectedMenu, setSelectedMenu] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState("chats");
   const [imgFile, setImgFile] = useState([]);
 
   return (

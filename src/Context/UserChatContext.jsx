@@ -25,6 +25,7 @@ export const UserChatContextprovider = (prop) => {
   // From this useEffect We will get user Chat data
   useEffect(() => {
     try {
+ 
       onSnapshot(doc(db, "chats", `${combinedId}`), (doc) => {
         // console.log("iammm", combinedId);
         const source = doc.metadata.hasPendingWrites ? "Local" : "Server";

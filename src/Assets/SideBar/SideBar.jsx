@@ -12,7 +12,6 @@ const text_color = "#a9aeba";
 const SideBar = () => {
   const { setSelectedMenu, selectedMenu } = useSelectedMenu();
   const [selectedButton, setSelectedButton] = useState("chats");
-  const navigate = useNavigate();
 
   const handleButtonClick = (button, takeRoute) => {
     setSelectedButton(button);

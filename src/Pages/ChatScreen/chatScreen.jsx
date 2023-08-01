@@ -12,11 +12,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Timestamp,
   arrayUnion,
+  collection,
   doc,
   getDoc,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useUserChat } from "../../Context/UserChatContext";
@@ -65,7 +68,6 @@ const ChatScreen = () => {
   //   }
   // }, []);
 
-  console.log("chatco", imgFile);
   // this is for chat default scroll to latest chat
   useEffect(() => {
     const scrollToLastElement = () => {
@@ -110,9 +112,12 @@ const ChatScreen = () => {
       const res = await getDoc(doc(db, "chats", combinedId));
       if (!res.exists()) {
         setDoc(doc(db, "chats", combinedId), { messages: [] });
-        debugger;
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
+          lastMessage: text,
+          date: Timestamp.now(),
+          senderUid: sender?.uid,
+          reciverUid: currentUser?.uid,
           messages: arrayUnion({
             id: uuidv4(),
             text: text,
@@ -121,41 +126,42 @@ const ChatScreen = () => {
           }),
         });
 
-        // for recent chats
-        setDoc(doc(db, "userChatsData", sender?.uid), {
-          chatList: [],
-        });
-        //  Here we update the last message of the current user in the sender list
-        await updateDoc(doc(db, "userChatsData", sender?.uid), {
-          chatList: arrayUnion({
-            [currentUser?.uid]: {
-              senderUID: currentUser?.uid,
-              displayName: currentUser?.displayName,
-              photoURL: currentUser?.photoURL,
-              lastMessage: text,
-              timestamp: Timestamp.now(),
-              unreadCount: 3,
-            },
-          }),
-        });
+        // updateDoc(doc(db, "chats", combinedId), {});
 
-        setDoc(doc(db, "userChatsData", currentUser?.uid), {
-          chatList: [],
-        });
+        // ? for recent chats
+        // setDoc(doc(db, "userChatsData", sender?.uid), {
+        //   chatList: [],
+        // });
+        // ?  Here we update the last message of the current user in the sender's chat list
+        // await updateDoc(doc(db, "userChatsData", sender?.uid), {
+        //   chatList: arrayUnion({
+        //     [currentUser?.uid]: {
+        //       id: uuidv4(),
+        //       uid: currentUser?.uid,
+        //       displayName: currentUser?.displayName,
+        //       photoURL: currentUser?.photoURL,
+        //       lastMessage: text,
+        //       timestamp: Timestamp.now(),
+        //     },
+        //   }),
+        // });
+
+        // ? setDoc(doc(db, "userChatsData", currentUser?.uid), {
+        //   chatList: [],
+        // });
         // Here we Update the last message of the Sender in the Current user's Chat List
-        await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
-          chatList: arrayUnion({
-            [sender?.uid]: {
-              id: uuidv4(),
-              senderUID: sender?.uid,
-              displayName: sender?.displayName,
-              photoURL: sender?.photoURL, // Fix: corrected the property name
-              lastMessage: text,
-              timestamp: Timestamp.now(),
-              unreadCount: 3,
-            },
-          }),
-        });
+        // await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
+        //   chatList: arrayUnion({
+        //     [sender?.uid]: {
+        //       id: uuidv4(),
+        //       uid: sender?.uid,
+        //       displayName: sender?.displayName,
+        //       photoURL: sender?.photoURL,
+        //       lastMessage: text,
+        //       timestamp: Timestamp.now(),
+        //     },
+        //   }),
+        // });
 
         // // for recent chats
         // await setDoc(doc(db, "userChats", currentUser.uid), {
@@ -183,7 +189,6 @@ const ChatScreen = () => {
         //   },
         // });
       } else {
-        debugger;
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
           messages: arrayUnion({
@@ -194,16 +199,73 @@ const ChatScreen = () => {
           }),
         });
 
-        //  Here we update last message of current user in sender list
+        updateDoc(doc(db, "chats", combinedId), {
+          lastMessage: text,
+          date: Timestamp.now(),
+        });
+
+        // Create an initial document to update.
+        // debugger;
+        // const frankDocRef = doc(db, "chats", combinedId);
+
+        // const q = query(frankDocRef, "2tWQSpRtezeIyCQHSFsWiiqHalT2");
+
+        // console.log("frank", q);
+
+        // await updateDoc(frankDocRef, {
+        //   lastMessage: text,
+        //   // "favorites.color": "Red"
+        // });
+        // await setDoc(frankDocRef, {
+        //     name: "Frank",
+        //     favorites: { food: "Pizza", color: "Blue", subject: "recess" },
+        //     age: 12
+        // });
+
+        // // To update age and favorite color:
+        // await updateDoc(frankDocRef, {
+        //     "age": 13,
+        //     "favorites.color": "Red"
+        // });
+
+        // here we update chat between two user
+        // updateDoc(frankDocRef, {
+        //   messages: arrayUnion({
+        //     id: uuidv4(),
+        //     text: text,
+        //     senderId: currentUser?.uid,
+        //     date: Timestamp.now(),
+        //   }),
+        // });
+        // await updateDoc(frankDocRef, {
+        //   lastMessage: text,
+        // });
+
+        //   Here we update last message of current user in sender list
         // await updateDoc(doc(db, "userChatsData", sender?.uid), {
         //   chatList: arrayUnion({
-        //     id: uuidv4(),
-        //     senderUID: currentUser?.uid,
-        //     displayName: currentUser?.displayName,
-        //     photoURL: currentUser?.photoURL,
-        //     lastMessage: text,
-        //     timestamp: Timestamp.now(),
-        //     unreadCount: 3,
+        //     [currentUser?.uid]: {
+        //       id: uuidv4(),
+        //       uid: currentUser?.uid,
+        //       displayName: currentUser?.displayName,
+        //       photoURL: currentUser?.photoURL,
+        //       lastMessage: text,
+        //       timestamp: Timestamp.now(),
+        //     },
+        //   }),
+        // });
+
+        // Here we Update the last message of the Sender in the Current user's Chat List
+        // await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
+        //   chatList: arrayUnion({
+        //     [sender?.uid]: {
+        //       id: uuidv4(),
+        //       uid: sender?.uid,
+        //       displayName: sender?.displayName,
+        //       photoURL: sender?.photoURL,
+        //       lastMessage: text,
+        //       timestamp: Timestamp.now(),
+        //     },
         //   }),
         // });
 
@@ -245,8 +307,8 @@ const ChatScreen = () => {
         //   },
         // });
       }
-      setImgFile(null);
       setText("");
+      setImgFile(null);
     } catch (error) {
       console.log(error);
     }
@@ -397,10 +459,10 @@ const ChatScreen = () => {
                       sx={{
                         textAlign: "center",
                         verticalAlign: "middle",
-                        maxWidth: "80%",
+                        maxWidth: "60%",
                         background: "#6b8afdd4",
                         borderRadius: "12px",
-                        m: "10px 0% 0 10%",
+                        m: "35px 0% 0 14%",
                       }}
                     >
                       <Typography
@@ -409,16 +471,15 @@ const ChatScreen = () => {
                           color: textHeading,
                           fontWeight: "400",
                           fontSize: "12px",
-                          m: "2px 16px 2px 16px",
-                          p: "9px",
+                          m: "1px 7px 1px 7px",
+                          p: "1.5px 2px 1.5px 2px",
                         }}
                       >
                         You and{" "}
                         <span style={{ color: "blue", fontWeight: "600" }}>
                           {sender?.displayName}
                         </span>{" "}
-                        don't have any Coversation Yet. To Start Conversation
-                        Say Hiii! 🙋‍♀️
+                        don't have any Coversation yet..!!!
                       </Typography>
                     </Box>{" "}
                     <img

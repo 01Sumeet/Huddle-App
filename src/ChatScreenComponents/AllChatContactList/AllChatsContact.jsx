@@ -47,7 +47,7 @@ const AllChatContactList = (prop) => {
         <Paper
           onClick={() => {
             handleSelect(data);
-            handleSelectedContact(data.uid);
+            handleSelectedContact(data?.uid);
           }}
           // onClick={() => showText("Hello")}
           key={index}
