@@ -124,6 +124,16 @@ const ChatScreen = () => {
             senderId: currentUser?.uid,
             date: Timestamp.now(),
           }),
+          SenderInfo: {
+            senderId: sender?.uid,
+            displayName: sender?.displayName,
+            photoURL: sender?.photoURL,
+          },
+          ReciverInfo: {
+            reciever: currentUser?.uid,
+            displayName: currentUser?.displayName,
+            photoURL: currentUser?.photoURL,
+          },
         });
 
         // updateDoc(doc(db, "chats", combinedId), {});

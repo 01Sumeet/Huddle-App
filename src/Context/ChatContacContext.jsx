@@ -9,6 +9,8 @@ import {
   where,
 } from "firebase/firestore";
 import { useAuthContext } from "./AuthContext";
+import { useContactListContext } from "./ContactListContext";
+import { useUserChat } from "./UserChatContext";
 
 export const chatContactContext = createContext({
   chatContact: [],
@@ -35,7 +37,7 @@ export const ChatContactContextProvider = (prop) => {
       try {
         const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
         const data = snapshot.docs.map((doc) => doc.data());
-        setChatContact(data,);
+        setChatContact(data);
       } catch (error) {
         console.log(error);
       }

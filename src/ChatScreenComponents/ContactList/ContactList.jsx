@@ -1,8 +1,9 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography, Stepper } from "@mui/material";
 import { BsFillPinAngleFill } from "react-icons/bs";
 import { useUserChat } from "../../Context/UserChatContext";
 import { useState } from "react";
 import { useContactListContext } from "../../Context/ContactListContext";
+import { useAuthContext } from "../../Context/AuthContext";
 
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
@@ -12,6 +13,16 @@ const ContactCardList = (prop) => {
   const { setSender } = useUserChat();
   const { contactList } = useContactListContext();
   const [selectedContact, setSelectedContact] = useState();
+  const { currentUser } = useAuthContext();
+
+  const convertUnixTimestampToTime = (unixTimestamp) => {
+    const dateObj = new Date(unixTimestamp * 1000);
+    return dateObj.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   const myArray = [
     "#ffcda5",
     "#4aac67",
@@ -30,7 +41,7 @@ const ContactCardList = (prop) => {
     "#4aac67",
     "#A9D2FD",
   ];
-  // console.log(prop);
+
   const handleSelect = (uid) => {
     const data = contactList?.filter((user) => user.uid === uid);
     if (prop?.showChatOnly === "chats") {
@@ -38,137 +49,146 @@ const ContactCardList = (prop) => {
     } else {
       setSender(uid);
     }
-    // console.log(uid);
   };
 
   // To make card selected
   const handleSelectedContact = (uid) => {
     setSelectedContact(uid);
-    console.log("selected", uid);
-    console.log("change", selectedContact);
-
-    // console.log("click", uid, "=====>>>", selectedContact);
   };
 
   // console.log(
-  //   "prop.data",
-  //   prop.data?.map((x) => x.uid)
+  //   "sumit",
+  //   prop?.data?.sort((a, b) => a.date.nanoseconds - b.date.nanoseconds)
   // );
+
   return (
     <>
       {prop?.showChatOnly === "chats"
-        ? prop?.data?.map((data, index) => (
-            <Paper
-              onClick={() => {
-                handleSelect(data?.senderUid);
-                handleSelectedContact(data?.senderUid);
-              }}
-              // onClick={() => showText("Hello")}
-              key={index}
-              elevation={4}
-              sx={{
-                bgcolor: "#2e343d",
-                display: "flex",
-                justifyContent: "space-between",
-                fontFamily: "Poppins, sans-serif",
-                height: "auto",
-                p: "8px",
-                mb: "8px",
-                borderRadius: "20px",
-                cursor: "pointer",
-                boxShadow:
-                  selectedContact === data?.senderUid
-                    ? "0px 5px 12px -1px #5f81ffdb, 0px 72px 10px 0px rgba(0,0,0,0.14), 0px 7px 10px 6px rgba(0,0,0,0.12)"
-                    : " 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);",
-              }}
-            >
+        ? prop?.data
+            ?.sort((x, y) => y.date.seconds - x.date.seconds)
+            .map((data, index) => (
               <Paper
-                elevation={3}
+                onClick={() => {
+                  handleSelect(data?.senderUid);
+                  handleSelectedContact(data?.senderUid);
+                }}
+                key={index}
+                elevation={4}
                 sx={{
-                  bgcolor: myArray[index],
-                  borderRadius: "15px",
+                  bgcolor: "#2e343d",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontFamily: "Poppins, sans-serif",
+                  height: "auto",
+                  p: "8px",
+                  mb: "8px",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  boxShadow:
+                    selectedContact === data?.senderUid
+                      ? "0px 5px 12px -1px #5f81ffdb, 0px 72px 10px 0px rgba(0,0,0,0.14), 0px 7px 10px 6px rgba(0,0,0,0.12)"
+                      : " 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);",
                 }}
               >
-                <img
-                  // src={data?.photoURL}
-                  alt=""
-                  height="60px"
-                  width="65px"
-                  style={{
-                    marginBottom: "-7px",
-                    filter: "drop-shadow(7px 6px 8px #131313)",
+                <Paper
+                  elevation={3}
+                  sx={{
+                    bgcolor: myArray[index],
+                    borderRadius: "15px",
                   }}
-                />
-              </Paper>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  width: "160px",
-                  color: text_color,
-                  fontFamily: "Poppins, sans-serif",
-                  ml: "10px",
-                }}
-              >
-                <Box sx={{ color: textHeading, fontSize: "14px" }}>
-                  {/* {data?.displayName} */}
-                </Box>
-                <Box sx={{ mt: "4px" }}>
-                  <Typography
-                    sx={{ fontSize: "11px", fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {" "}
-                    {data?.lastMessage}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: text_color,
-                  fontFamily: "Poppins, sans-serif",
-                }}
-              >
+                >
+                  <img
+                    src={
+                      data?.ReciverInfo?.reciever === currentUser?.uid
+                        ? data?.SenderInfo?.photoURL
+                        : data?.ReciverInfo?.photoURL
+                    }
+                    alt=""
+                    height="60px"
+                    width="65px"
+                    style={{
+                      marginBottom: "-7px",
+                      filter: "drop-shadow(7px 6px 8px #131313)",
+                    }}
+                  />
+                </Paper>
                 <Box
                   sx={{
-                    fontSize: "9px",
-                    mb: "4px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    width: "160px",
                     color: text_color,
-                    mt: "4px",
-                    mr: "2px",
+                    fontFamily: "Poppins, sans-serif",
+                    ml: "10px",
                   }}
                 >
-                  12:59AM
+                  <Box sx={{ color: textHeading, fontSize: "14px" }}>
+                    {data?.ReciverInfo?.reciever === currentUser?.uid
+                      ? data?.SenderInfo?.displayName
+                      : data?.ReciverInfo?.displayName}
+                  </Box>
+                  <Box sx={{ mt: "4px" }}>
+                    <Typography
+                      sx={{
+                        fontSize: "11px",
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      {" "}
+                      {data?.lastMessage}
+                    </Typography>
+                  </Box>
                 </Box>
                 <Box
                   sx={{
-                    bgcolor: "#6b8afd",
-                    height: "19px",
-                    width: "19px",
-                    borderRadius: "50%",
-                    textAlign: "center",
-                    verticalAlign: "middle",
-                    mb: "4px",
-                    color: textHeading,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: text_color,
+                    fontFamily: "Poppins, sans-serif",
                   }}
                 >
-                  <Typography
-                    sx={{ fontFamily: "Poppins, sans-serif", fontSize: "14px" }}
+                  <Box
+                    sx={{
+                      fontSize: "9px",
+                      mb: "4px",
+                      color: text_color,
+                      mt: "4px",
+                      mr: "2px",
+                    }}
                   >
-                    {" "}
-                    2
-                  </Typography>
+                    {convertUnixTimestampToTime(data?.date)}
+                  </Box>
+                  <Box
+                    sx={{
+                      bgcolor: "#6b8afd",
+                      height: "19px",
+                      width: "19px",
+                      borderRadius: "50%",
+                      textAlign: "center",
+                      verticalAlign: "middle",
+                      mb: "4px",
+                      color: textHeading,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontFamily: "Poppins, sans-serif",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {" "}
+                      2
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mb: "-4px" }}>
+                    <BsFillPinAngleFill />
+                  </Box>
                 </Box>
-                <Box sx={{ mb: "-4px" }}>
-                  <BsFillPinAngleFill />
-                </Box>
-              </Box>
-            </Paper>
-          ))
+              </Paper>
+            ))
         : prop?.data?.map((data, index) => (
             <Paper
               onClick={() => {
