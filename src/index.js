@@ -8,6 +8,7 @@ import { ContactListContextProvider } from './Context/ContactListContext';
 import { UserChatContextprovider } from './Context/UserChatContext';
 import { ChatContactContextProvider } from './Context/ChatContacContext';
 import { SelectedMenuContextProvider } from './Context/SelectedMenu';
+import { UserStatusProvider } from './Context/UserStatusContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,7 +17,9 @@ root.render(
       <ChatContactContextProvider>
         <UserChatContextprovider>
           <SelectedMenuContextProvider>
-            <App />
+            <UserStatusProvider>
+              <App />
+            </UserStatusProvider>
           </SelectedMenuContextProvider>
         </UserChatContextprovider>
       </ChatContactContextProvider>

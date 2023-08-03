@@ -12,14 +12,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Timestamp,
   arrayUnion,
-  collection,
   doc,
   getDoc,
-  query,
-  serverTimestamp,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useUserChat } from "../../Context/UserChatContext";
@@ -29,14 +25,13 @@ import Chat from "../../ChatScreenComponents/MessageBox/ChatLogic";
 import { useContactListContext } from "../../Context/ContactListContext";
 import ContactCardList from "../../ChatScreenComponents/ContactList/ContactList";
 import SideBar from "../../Assets/SideBar/SideBar";
-import { useGetUserStatus } from "../../Hooks/UserStatus/useGetUserStatus";
 import SearchBar from "../../Assets/SearchBar/SearchBar";
 import ProfileDetails from "../../ChatScreenComponents/ProfileDetails/ProfileDetails";
 import MessageInput from "../../Assets/MessageInput/MessageInput";
-import AllChatContactList from "../../ChatScreenComponents/AllChatContactList/AllChatsContact";
 import MoreOption from "../../ChatScreenComponents/MoreOption/MoreOption";
 import { useAllChatsContact } from "../../Context/ChatContacContext";
 import { useSelectedMenu } from "../../Context/SelectedMenu";
+import { usePageVisibility } from "react-page-visibility";
 
 const bg_color = "#131313";
 //const bg_up_color = "#2e343d";
@@ -48,25 +43,30 @@ const textHeading = "#FEFEFF";
 
 const ChatScreen = () => {
   const containerRef = useRef(null);
+  const ref = useRef(null);
   const { contactList } = useContactListContext();
   const { currentUser } = useAuthContext();
   const { sender, userChat } = useUserChat();
   const { chatContact } = useAllChatsContact();
   const { selectedMenu, imgFile, setImgFile } = useSelectedMenu();
-  const { isOnline } = useGetUserStatus();
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
   const container = containerRef.current;
   const Change = userChat?.messages?.length;
-  const ref = useRef(null);
-  // 👇️ check if an element is focused on mount
-  // useEffect(() => {
-  //   if (document.activeElement === ref.current) {
-  //     console.log("element has focus");
-  //   } else {
-  //     console.log("element does NOT have focus");
-  //   }
-  // }, []);
+
+  const [isTabVisible, setTabVisibility] = useState(true);
+  const isVisible = usePageVisibility();
+
+  // this function ensure that weather user is online or not
+  useEffect(() => {
+    setTabVisibility(isVisible);
+    if (currentUser?.uid) {
+      updateDoc(doc(db, "users", `${currentUser?.uid}`), {
+        status: isTabVisible,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVisible]);
 
   // this is for chat default scroll to latest chat
   useEffect(() => {
@@ -109,9 +109,12 @@ const ChatScreen = () => {
         : sender?.uid + currentUser.uid;
 
     try {
+      // Here we check weather user collection exist in database
       const res = await getDoc(doc(db, "chats", combinedId));
       if (!res.exists()) {
+        // If not then we will create here a database with the r
         setDoc(doc(db, "chats", combinedId), { messages: [] });
+
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
           lastMessage: text,
@@ -120,203 +123,45 @@ const ChatScreen = () => {
           reciverUid: currentUser?.uid,
           messages: arrayUnion({
             id: uuidv4(),
+            img: "",
             text: text,
             senderId: currentUser?.uid,
             date: Timestamp.now(),
           }),
           SenderInfo: {
+            pin: false,
             senderId: sender?.uid,
             displayName: sender?.displayName,
             photoURL: sender?.photoURL,
           },
           ReciverInfo: {
+            pin: false,
             reciever: currentUser?.uid,
             displayName: currentUser?.displayName,
             photoURL: currentUser?.photoURL,
           },
         });
 
-        // updateDoc(doc(db, "chats", combinedId), {});
-
-        // ? for recent chats
-        // setDoc(doc(db, "userChatsData", sender?.uid), {
-        //   chatList: [],
-        // });
-        // ?  Here we update the last message of the current user in the sender's chat list
-        // await updateDoc(doc(db, "userChatsData", sender?.uid), {
-        //   chatList: arrayUnion({
-        //     [currentUser?.uid]: {
-        //       id: uuidv4(),
-        //       uid: currentUser?.uid,
-        //       displayName: currentUser?.displayName,
-        //       photoURL: currentUser?.photoURL,
-        //       lastMessage: text,
-        //       timestamp: Timestamp.now(),
-        //     },
-        //   }),
-        // });
-
-        // ? setDoc(doc(db, "userChatsData", currentUser?.uid), {
-        //   chatList: [],
-        // });
-        // Here we Update the last message of the Sender in the Current user's Chat List
-        // await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
-        //   chatList: arrayUnion({
-        //     [sender?.uid]: {
-        //       id: uuidv4(),
-        //       uid: sender?.uid,
-        //       displayName: sender?.displayName,
-        //       photoURL: sender?.photoURL,
-        //       lastMessage: text,
-        //       timestamp: Timestamp.now(),
-        //     },
-        //   }),
-        // });
-
-        // // for recent chats
-        // await setDoc(doc(db, "userChats", currentUser.uid), {
-        //   [combinedId + ".date"]: serverTimestamp(),
-        //   userInfo: {
-        //     uid: sender?.uid,
-        //     displayName: sender.displayName,
-        //     photoURL: sender.photoURL,
-        //   },
-        // });
         setText("");
-        // here we update last messages
-        // updateDoc(doc(db, "userChats", currentUser?.uid), {
-        //   date: serverTimestamp(),
-        //   userLastMsg: {
-        //     lastMessage: text,
-        //   },
-        // });
-
-        // // here we update for second user
-        // updateDoc(doc(db, "userChats", sender?.uid), {
-        //   date: serverTimestamp(),
-        //   userLastMsg: {
-        //     lastMessage: text,
-        //   },
-        // });
       } else {
         // here we update chat between two user
         updateDoc(doc(db, "chats", combinedId), {
           messages: arrayUnion({
             id: uuidv4(),
+            image: "",
             text: text,
             senderId: currentUser?.uid,
             date: Timestamp.now(),
           }),
         });
 
+        // Here we update last Messages for the user
         updateDoc(doc(db, "chats", combinedId), {
           lastMessage: text,
           date: Timestamp.now(),
         });
-
-        // Create an initial document to update.
-        // debugger;
-        // const frankDocRef = doc(db, "chats", combinedId);
-
-        // const q = query(frankDocRef, "2tWQSpRtezeIyCQHSFsWiiqHalT2");
-
-        // console.log("frank", q);
-
-        // await updateDoc(frankDocRef, {
-        //   lastMessage: text,
-        //   // "favorites.color": "Red"
-        // });
-        // await setDoc(frankDocRef, {
-        //     name: "Frank",
-        //     favorites: { food: "Pizza", color: "Blue", subject: "recess" },
-        //     age: 12
-        // });
-
-        // // To update age and favorite color:
-        // await updateDoc(frankDocRef, {
-        //     "age": 13,
-        //     "favorites.color": "Red"
-        // });
-
-        // here we update chat between two user
-        // updateDoc(frankDocRef, {
-        //   messages: arrayUnion({
-        //     id: uuidv4(),
-        //     text: text,
-        //     senderId: currentUser?.uid,
-        //     date: Timestamp.now(),
-        //   }),
-        // });
-        // await updateDoc(frankDocRef, {
-        //   lastMessage: text,
-        // });
-
-        //   Here we update last message of current user in sender list
-        // await updateDoc(doc(db, "userChatsData", sender?.uid), {
-        //   chatList: arrayUnion({
-        //     [currentUser?.uid]: {
-        //       id: uuidv4(),
-        //       uid: currentUser?.uid,
-        //       displayName: currentUser?.displayName,
-        //       photoURL: currentUser?.photoURL,
-        //       lastMessage: text,
-        //       timestamp: Timestamp.now(),
-        //     },
-        //   }),
-        // });
-
-        // Here we Update the last message of the Sender in the Current user's Chat List
-        // await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
-        //   chatList: arrayUnion({
-        //     [sender?.uid]: {
-        //       id: uuidv4(),
-        //       uid: sender?.uid,
-        //       displayName: sender?.displayName,
-        //       photoURL: sender?.photoURL,
-        //       lastMessage: text,
-        //       timestamp: Timestamp.now(),
-        //     },
-        //   }),
-        // });
-
-        // // Here we Update last message of Sender in Current user Chat List
-        // await updateDoc(doc(db, "userChatsData", currentUser?.uid), {
-        //   chatList: arrayUnion({
-        //     id: uuidv4(),
-        //     senderUID: sender?.uid,
-        //     displayName: sender?.displayName,
-        //     photoURLL: sender?.photoURL,
-        //     lastMessage: text,
-        //     timestamp: Timestamp.now(),
-        //     unreadCount: 3,
-        //   }),
-        // });
-
-        // // here we update chat between two user
-        // updateDoc(doc(db, "chats", combinedId), {
-        //   messages: arrayUnion({
-        //     id: uuidv4(),
-        //     text: imgFile,
-        //     senderId: currentUser.uid,
-        //     date: Timestamp.now(),
-        //   }),
-        // });
-        // // here we update last messages
-        // updateDoc(doc(db, "userChats", currentUser?.uid), {
-        //   date: serverTimestamp(),
-        //   userLastMsg: {
-        //     lastMessage: text,
-        //   },
-        // });
-
-        // // here we update for second user
-        // updateDoc(doc(db, "userChats", sender?.uid), {
-        //   date: serverTimestamp(),
-        //   userLastMsg: {
-        //     lastMessage: text,
-        //   },
-        // });
       }
+
       setText("");
       setImgFile(null);
     } catch (error) {
@@ -428,7 +273,22 @@ const ChatScreen = () => {
               <Box sx={{ color: textHeading }}>{sender?.displayName}</Box>
               <Box component="p" sx={{ fontSize: "10px" }}>
                 {/* 42 Members, 10 Online */}
-                Online
+                {sender?.status ? "Not Active" : "Online"}
+                {/* <Typography
+                  component={"small"}
+                  title="User is Online"
+                  sx={{
+                    ml: "10px",
+                    position:"relative",
+                    top:"1px",
+                    color: "#00FF00",
+                    fontSize: "16px",
+                    filter: "drop-shadow(1px 1px 2px #00FF00)",
+                    visibility: !sender?.status ? "visible" : "hidden",
+                  }}
+                >
+                  ●
+                </Typography> */}
               </Box>
               <Box
                 ref={containerRef}

@@ -1,5 +1,6 @@
 import { Paper, Box, Typography } from "@mui/material";
 import { useAuthContext } from "../../Context/AuthContext";
+import { useStatusContext } from "../../Context/UserStatusContext";
 
 //const bg_up_color = "#2e343d";
 const highlight = "#6b8afd";
@@ -7,7 +8,9 @@ const textHeading = "#FEFEFF";
 
 const ProfileDetails = (details) => {
   const { currentUser } = useAuthContext();
+  const { status } = useStatusContext();
 
+  console.log("detailssss", details);
   return (
     <>
       <Box
@@ -80,7 +83,7 @@ const ProfileDetails = (details) => {
               fontFamily: "Poppins, sans-serif",
             }}
           >
-            Online
+            {status?.status ? "Offline" : "Online"}
           </Typography>
           <Box
             sx={{

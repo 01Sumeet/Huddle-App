@@ -6,6 +6,11 @@ import {
   updateProfile,
   UserProfile,
 } from "firebase/auth";
+import { FormControl } from "@mui/material";
+import { InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+
 import { auth, db, storage } from "../../Firebase/firebaseConfig";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
@@ -14,8 +19,12 @@ import InputField from "../../Assets/InputField";
 import toast, { Toaster } from "react-hot-toast";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
-
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { useState } from "react";
 const SignUp = () => {
+  const [showPassword, setShowPassword] = useState(false);
   // initial vales for form
   const initialValues = {
     file: "",
@@ -57,7 +66,11 @@ const SignUp = () => {
   //         [InputField]: value,
   //     }));
   // };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleSubmit = async (values) => {
     const displayName = `${values.firstName} ${values.lastName}`;
     const file = values.file;
@@ -113,6 +126,7 @@ const SignUp = () => {
               email: values.email,
               phoneNumber,
               photoURL: downloadURL,
+              status: false,
             });
             // console.log("Document written with ID: ", docRef.id);
           });
@@ -159,7 +173,7 @@ const SignUp = () => {
               />
               {/* <img
                                 className="musician imgg"
-                                src={require("./image/rapper.png")}
+                                src={require("./image/rapper.png")}f
                                 alt=""
                             /> */}
             </div>
@@ -196,7 +210,17 @@ const SignUp = () => {
             <div className="input-div">
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <div className="input-filed">
-                  <InputField
+                  {/* <InputField
+                    name="firstName"
+                    placeholder="First Name"
+                    value={formikProps.values.firstName}
+                    onChange={formikProps.handleChange("firstName")}
+                  /> */}
+                  <TextField
+                    sx={{ color: "white" }}
+                    id="outlined-basic"
+                    variant="outlined"
+                    label="First Name"
                     name="firstName"
                     placeholder="First Name"
                     value={formikProps.values.firstName}
@@ -211,8 +235,11 @@ const SignUp = () => {
                   </div>
                 </div>
                 <div className="input-filed">
-                  <InputField
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
                     name="lastName"
+                    label="Last Name"
                     placeholder="Last Name"
                     value={formikProps.values.lastName}
                     onChange={formikProps.handleChange("lastName")}
@@ -229,8 +256,11 @@ const SignUp = () => {
 
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <div className="input-filed">
-                  <InputField
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
                     name="email"
+                    label="Email"
                     placeholder="Email"
                     value={formikProps.values.email}
                     onChange={formikProps.handleChange("email")}
@@ -244,9 +274,12 @@ const SignUp = () => {
                   </div>
                 </div>
                 <div className="input-filed">
-                  <InputField
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
                     name="phoneNumber"
                     type="number"
+                    label="Phone Number"
                     placeholder="Phone Number"
                     value={formikProps.values.phoneNumber}
                     onChange={formikProps.handleChange("phoneNumber")}
@@ -263,13 +296,38 @@ const SignUp = () => {
 
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <div className="input-filed">
-                  <InputField
+                  <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formikProps.values.password}
+                      onChange={formikProps.handleChange("password")}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                    />
+                  </FormControl>
+                  {/* <TextField
                     name="password"
                     type="password"
                     placeholder="Password"
                     value={formikProps.values.password}
                     onChange={formikProps.handleChange("password")}
-                  />
+                  /> */}
                   <div className="input-error">
                     <ErrorMessage
                       className="error"
@@ -279,13 +337,38 @@ const SignUp = () => {
                   </div>
                 </div>
                 <div className="input-filed">
-                  <InputField
+                  {/* <TextField
                     name="confirmPassword"
                     type="password"
                     placeholder="Confirm Password"
                     value={formikProps.values.confirmPassword}
                     onChange={formikProps.handleChange("confirmPassword")}
-                  />
+                  /> */}
+                  <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Confirm Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-basic"
+                      name="confirmPassword"
+                      type={showPassword ? "text" : "password"}
+                      value={formikProps.values.confirmPassword}
+                      onChange={formikProps.handleChange("confirmPassword")}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                    />
+                  </FormControl>
                   <div className="input-error">
                     <ErrorMessage
                       component="small"

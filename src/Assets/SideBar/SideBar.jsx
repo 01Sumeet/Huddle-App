@@ -82,31 +82,13 @@ const SideBar = () => {
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon
                   sx={{
-                    color: selectedButton === "button3" ? "#fff" : text_color,
+                    color: selectedButton === "meet" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
                 >
                   <SiGooglemeet size={20} />
                   <div>Meet</div>
-                </ListItemIcon>{" "}
-              </ListItemButton>
-            </ListItem>
-            <ListItem
-              onClick={() => handleButtonClick("meet")}
-              disablePadding
-              sx={{ bgcolor: selectedButton === "meet" ? "#6b8afd29" : "" }}
-            >
-              <ListItemButton sx={{ display: "initial" }}>
-                <ListItemIcon
-                  sx={{
-                    color: selectedButton === "meet" ? "#fff" : text_color,
-                    display: "contents",
-                    textAlign: "center",
-                  }}
-                >
-                  <IoCalendar size={20} />
-                  <div>Calendar</div>
                 </ListItemIcon>{" "}
               </ListItemButton>
             </ListItem>
@@ -123,8 +105,8 @@ const SideBar = () => {
                     textAlign: "center",
                   }}
                 >
-                  <MdAnalytics size={20} />
-                  <div>Rating</div>
+                  <IoCalendar size={20} />
+                  <div>Calendar</div>
                 </ListItemIcon>{" "}
               </ListItemButton>
             </ListItem>
@@ -141,8 +123,8 @@ const SideBar = () => {
                     textAlign: "center",
                   }}
                 >
-                  <MdBookmarks size={20} />
-                  <div>Saved</div>
+                  <MdAnalytics size={20} />
+                  <div>Rating</div>
                 </ListItemIcon>{" "}
               </ListItemButton>
             </ListItem>
@@ -155,6 +137,24 @@ const SideBar = () => {
                 <ListItemIcon
                   sx={{
                     color: selectedButton === "saved" ? "#fff" : text_color,
+                    display: "contents",
+                    textAlign: "center",
+                  }}
+                >
+                  <MdBookmarks size={20} />
+                  <div>Saved</div>
+                </ListItemIcon>{" "}
+              </ListItemButton>
+            </ListItem>
+            <ListItem
+              onClick={() => handleButtonClick("setting")}
+              disablePadding
+              sx={{ bgcolor: selectedButton === "setting" ? "#6b8afd29" : "" }}
+            >
+              <ListItemButton sx={{ display: "initial" }}>
+                <ListItemIcon
+                  sx={{
+                    color: selectedButton === "setting" ? "#fff" : text_color,
                     display: "contents",
                     textAlign: "center",
                   }}
