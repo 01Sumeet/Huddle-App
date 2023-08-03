@@ -43,7 +43,6 @@ const ContactCardList = (prop) => {
   ];
 
   const handleSelect = (uid) => {
-    debugger;
     const data = contactList?.find((user) => user.uid === uid);
     if (prop?.showChatOnly === "chats") {
       setSender(data);
@@ -58,9 +57,9 @@ const ContactCardList = (prop) => {
     setSelectedContact(uid);
   };
 
-  const handleContextMenu = (event) => {
+  const handleContextMenu = (event, val) => {
     event.preventDefault(); // Prevent the default context menu from showing up
-    console.log("Right-click event detected!");
+    console.log("Right-click event detected!", val);
     // You can perform additional actions here if needed
   };
 
@@ -115,6 +114,14 @@ const ContactCardList = (prop) => {
       {prop?.showChatOnly === "chats"
         ? data?.map((data, index) => (
             <Paper
+              onContextMenu={(e) =>
+                handleContextMenu(
+                  e,
+                  data?.ReciverInfo?.reciever === currentUser?.uid
+                    ? data?.SenderInfo?.senderId
+                    : data?.ReciverInfo?.reciever
+                )
+              }
               onClick={(e) => {
                 handleSelect(
                   data?.ReciverInfo?.reciever === currentUser?.uid
@@ -126,7 +133,6 @@ const ContactCardList = (prop) => {
                     ? data?.SenderInfo?.senderId
                     : data?.ReciverInfo?.reciever
                 );
-                handleContextMenu(e);
               }}
               key={index}
               elevation={4}
