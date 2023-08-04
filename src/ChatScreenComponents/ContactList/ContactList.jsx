@@ -1,10 +1,15 @@
-import { Box, Paper, Typography, Stepper } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { BsFillPinAngleFill } from "react-icons/bs";
+import { RiUnpinFill } from "react-icons/ri";
 import { useUserChat } from "../../Context/UserChatContext";
 import { useState } from "react";
+import "../../Animation/Animation.css";
 import { useContactListContext } from "../../Context/ContactListContext";
 import { useAuthContext } from "../../Context/AuthContext";
-
+import { doc, updateDoc } from "firebase/firestore";
+import Button from "@mui/material/Button";
+import { db } from "../../Firebase/firebaseConfig";
+import toast from "react-hot-toast";
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
@@ -13,6 +18,7 @@ const ContactCardList = (prop) => {
   const { setSender } = useUserChat();
   const { contactList } = useContactListContext();
   const [selectedContact, setSelectedContact] = useState();
+  const [selectPin, setSelectPin] = useState();
   const { currentUser } = useAuthContext();
 
   const convertUnixTimestampToTime = (unixTimestamp) => {
@@ -57,11 +63,39 @@ const ContactCardList = (prop) => {
     setSelectedContact(uid);
   };
 
-  const handleContextMenu = (event, val) => {
+  const handleContextMenu = async (event, val) => {
+    setSelectPin(val);
     event.preventDefault(); // Prevent the default context menu from showing up
     console.log("Right-click event detected!", val);
-    // You can perform additional actions here if needed
   };
+
+  const handleSetPin = async (event, val) => {
+    event.stopPropagation();
+    const combinedId =
+      currentUser?.uid > val ? currentUser?.uid + val : val + currentUser?.uid;
+    console.log(currentUser?.uid);
+    try {
+      await updateDoc(doc(db, "chats", combinedId), {
+        "SenderInfo.pin": true,
+      });
+    } catch (error) {
+      toast.error(" An error encounterd", {
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
+      });
+    }
+  };
+
+  // You can perform additional actions here if needed
 
   const excludedObject = prop?.data?.filter((x) =>
     x?.ReciverInfo?.reciever === currentUser?.uid
@@ -228,6 +262,7 @@ const ContactCardList = (prop) => {
                 </Box>
                 <Box
                   sx={{
+                    //  position: "relative",
                     bgcolor: "#6b8afd",
                     height: "19px",
                     width: "19px",
@@ -248,6 +283,60 @@ const ContactCardList = (prop) => {
                     {" "}
                     2
                   </Typography>
+                </Box>
+                <Box
+                  component={"span"}
+                  sx={{
+                    // bgcolor: "#2e343d",
+                    position: "relative",
+                    top: "-7%",
+                    right: "110%",
+                    visibility:
+                      selectPin ===
+                      (data?.ReciverInfo?.reciever === currentUser?.uid
+                        ? data?.SenderInfo?.senderId
+                        : data?.ReciverInfo?.reciever)
+                        ? "visible"
+                        : "hidden",
+                    animation:
+                      "scale-up-top 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both",
+                  }}
+                >
+                  <Box
+                    component={"span"}
+                    sx={{
+                      position: "absolute",
+                      display: "flex",
+                      flexDirection: "row",
+                      bgcolor: "#202329",
+                      boxShadow: "-7px 7px 9px -5px #6b8afd",
+                      padding: "5px 5px 0 5px",
+                      borderRadius: "14px",
+                    }}
+                  >
+                    <Box
+                      component={"span"}
+                      sx={{ color: text_color, m: "7px", mr: "10px" }}
+                    >
+                      <BsFillPinAngleFill
+                        sx={{ m: 0 }}
+                        onClick={(e) =>
+                          handleSetPin(
+                            e,
+                            data?.ReciverInfo?.reciever === currentUser?.uid
+                              ? data?.SenderInfo?.senderId
+                              : data?.ReciverInfo?.reciever
+                          )
+                        }
+                      />
+                    </Box>
+                    <Box
+                      component={"span"}
+                      sx={{ color: text_color, m: "7px" }}
+                    >
+                      <RiUnpinFill sx={{ m: 0 }} />
+                    </Box>
+                  </Box>
                 </Box>
                 <Box
                   title="This Chat is Pinned"
@@ -334,6 +423,8 @@ const ContactCardList = (prop) => {
                         fontSize: "16px",
                         filter: "drop-shadow(1px 1px 2px #00FF00)",
                         visibility: !data?.status ? "visible" : "hidden",
+                        animation:
+                          "text-focus-in 0.9s cubic-bezier(0.55, 0.085, 0.68, 0.53) infinite both",
                       }}
                     >
                       ●

@@ -104,9 +104,9 @@ const ChatScreen = () => {
   // this will create new user caht in db and update message
   const handleSent = async () => {
     const combinedId =
-      currentUser.uid > sender?.uid
-        ? currentUser.uid + sender?.uid
-        : sender?.uid + currentUser.uid;
+      currentUser?.uid > sender?.uid
+        ? currentUser?.uid + sender?.uid
+        : sender?.uid + currentUser?.uid;
 
     try {
       // Here we check weather user collection exist in database
@@ -410,9 +410,11 @@ const ChatScreen = () => {
           </Box>
         </Box>
         {/*Profile Details Card */}
-        <ProfileDetails
-          sender={sender?.uid?.length > 0 ? sender : currentUser}
-        />
+        {currentUser.uid && (
+          <ProfileDetails
+            sender={sender?.uid?.length > 0 ? sender : currentUser}
+          />
+        )}
       </Box>
     </>
   );

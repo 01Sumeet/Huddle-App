@@ -132,7 +132,7 @@ const Login = () => {
               </div>
               <div className="action">
                 {/* <button onClick={}>Make me a toast</button> */}
-                <Toaster />
+                
                 <Button className="signup-btn" text="Log In" type="submit" />
               </div>
             </div>

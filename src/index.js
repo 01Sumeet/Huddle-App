@@ -9,6 +9,7 @@ import { UserChatContextprovider } from './Context/UserChatContext';
 import { ChatContactContextProvider } from './Context/ChatContacContext';
 import { SelectedMenuContextProvider } from './Context/SelectedMenu';
 import { UserStatusProvider } from './Context/UserStatusContext';
+import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,7 +19,12 @@ root.render(
         <UserChatContextprovider>
           <SelectedMenuContextProvider>
             <UserStatusProvider>
+
               <App />
+              <Toaster
+                position="top-right"
+                reverseOrder={false}
+              />
             </UserStatusProvider>
           </SelectedMenuContextProvider>
         </UserChatContextprovider>

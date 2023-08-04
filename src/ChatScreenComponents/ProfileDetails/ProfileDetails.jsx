@@ -1,6 +1,7 @@
 import { Paper, Box, Typography } from "@mui/material";
 import { useAuthContext } from "../../Context/AuthContext";
 import { useStatusContext } from "../../Context/UserStatusContext";
+import "../../Animation/Animation.css";
 
 //const bg_up_color = "#2e343d";
 const highlight = "#6b8afd";
@@ -20,6 +21,8 @@ const ProfileDetails = (details) => {
           justifyContent: "flex-start",
           flexDirection: "column",
           p: "18px 10px 17px 15px",
+          animation:
+            "slide-in-fwd-center 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both",
         }}
         className="Profile-detail"
       >

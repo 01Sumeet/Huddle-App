@@ -7,7 +7,8 @@ import ChatScreen from './Pages/ChatScreen/chatScreen.jsx'
 import { PrivateRoute } from "./PvtRoute/PrivateRoute";
 
 function App() {
-  return (
+  return (<>
+
     <div className="App-header">
       <div className="main-content">
         <Router>
@@ -22,6 +23,7 @@ function App() {
         </Router>
       </div>
     </div>
+  </>
   );
 }
 

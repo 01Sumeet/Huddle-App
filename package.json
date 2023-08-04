@@ -72,6 +72,9 @@
   "react-scripts": "^5.0.1",
   
     
+  "react-toastify": "^9.1.3",
+  
+    
   "redux-persist": "^6.0.0",
   
     
