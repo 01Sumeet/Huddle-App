@@ -494,8 +494,7 @@ const ContactCardList = (prop) => {
                         fontSize: "16px",
                         filter: "drop-shadow(1px 1px 2px #00FF00)",
                         visibility: !data?.status ? "visible" : "hidden",
-                        animation:
-                          "breathing 3s infinite",
+                        animation: "breathing 3s infinite",
                       }}
                     >
                       ●
