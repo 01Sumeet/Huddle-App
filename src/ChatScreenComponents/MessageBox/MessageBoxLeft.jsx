@@ -1,6 +1,7 @@
 import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import "../../Animation/Animation.css";
 
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
@@ -48,6 +49,9 @@ const MessageBoxLeft = (msg) => {
           <Paper
             elevation={10}
             sx={{
+              animation:
+                "scale-up-hor-left 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both",
+              backfaceVisibility: "hidden",
               bgcolor: "#2E343D",
               maxWidth: "260px",
               minWidth: "160px",

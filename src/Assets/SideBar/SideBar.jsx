@@ -24,7 +24,7 @@ const SideBar = () => {
         <Box
           sx={{
             bgcolor: "transparent",
-            height: "96.5%",
+            // height: "96.5%",
           }}
         >
           <Avatar
@@ -37,7 +37,7 @@ const SideBar = () => {
               filter: "drop-shadow(1px 3px 10px #572ae7)",
             }}
           />
-          <List sx={{ fontSize: "11px", height: "89%" }}>
+          <List sx={{ fontSize: "11px" }}>
             <ListItem
               onClick={() => handleButtonClick("chats")}
               sx={{ bgcolor: selectedButton === "chats" ? "#6b8afd29" : "" }}
@@ -149,7 +149,10 @@ const SideBar = () => {
             <ListItem
               onClick={() => handleButtonClick("setting")}
               disablePadding
-              sx={{ bgcolor: selectedButton === "setting" ? "#6b8afd29" : "" }}
+              sx={{
+                bgcolor: selectedButton === "setting" ? "#6b8afd29" : "",
+     
+              }}
             >
               <ListItemButton sx={{ display: "initial" }}>
                 <ListItemIcon

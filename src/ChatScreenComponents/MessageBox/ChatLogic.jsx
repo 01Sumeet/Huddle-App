@@ -18,9 +18,9 @@ const Chat = () => {
     <>
       {userChat?.messages?.map((msg, index) =>
         msg.senderId === currentUser?.uid ? (
-          <MessageBoxRight data={msg} key={uuidv4()} />
+          <MessageBoxRight data={msg} key={index} />
         ) : (
-          <MessageBoxLeft data={msg} sender={sender} key={uuidv4()} />
+          <MessageBoxLeft data={msg} sender={sender} key={index} />
         )
       )}
     </>

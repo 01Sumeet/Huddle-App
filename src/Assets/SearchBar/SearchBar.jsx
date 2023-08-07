@@ -11,7 +11,7 @@ const SearchBar = (prop) => {
         p: "2px 4px",
         display: "flex",
         alignItems: "center",
-        width: "250px",
+        width: "263px",
         borderRadius: "15px",
         bgcolor: "#2e343d",
         fontFamily: "Poppins, sans-serif",

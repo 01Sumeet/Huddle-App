@@ -18,7 +18,13 @@ import { Form, Formik, ErrorMessage } from "formik";
 import InputField from "../../Assets/InputField";
 import toast, { Toaster } from "react-hot-toast";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -75,7 +81,7 @@ const SignUp = () => {
     const displayName = `${values.firstName} ${values.lastName}`;
     const file = values.file;
     const phoneNumber = values.phoneNumber;
-    console.log("=====>>>>>>>>", file, values);
+    // console.log("=====>>>>>>>>", file, values);
     try {
       const res = await createUserWithEmailAndPassword(
         auth,
@@ -127,6 +133,7 @@ const SignUp = () => {
               phoneNumber,
               photoURL: downloadURL,
               status: false,
+              lastSeen: serverTimestamp(),
             });
             // console.log("Document written with ID: ", docRef.id);
           });

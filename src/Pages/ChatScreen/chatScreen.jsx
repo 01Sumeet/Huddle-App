@@ -8,6 +8,7 @@ import { IoCall } from "react-icons/io5";
 import { CgMoreVertical } from "react-icons/cg";
 import { Helmet } from "react-helmet";
 import "./Chat.css";
+import "../../Animation/Animation.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Timestamp,
@@ -32,6 +33,8 @@ import MoreOption from "../../ChatScreenComponents/MoreOption/MoreOption";
 import { useAllChatsContact } from "../../Context/ChatContacContext";
 import { useSelectedMenu } from "../../Context/SelectedMenu";
 import { usePageVisibility } from "react-page-visibility";
+import PhotoPreview from "../../ChatScreenComponents/PhotoPreview/PhotoPreview";
+import { onValue } from "firebase/database";
 
 const bg_color = "#131313";
 //const bg_up_color = "#2e343d";
@@ -54,6 +57,18 @@ const ChatScreen = () => {
   const container = containerRef.current;
   const Change = userChat?.messages?.length;
 
+  //
+  // const connectedRef = ref(db, "");
+  // onValue(connectedRef, (snap) => {
+  //   if (snap.val() === true) {
+  //     console.log("connected");
+  //   } else {
+  //     console.log("not connected");
+  //   }
+  // });
+
+  //
+
   const [isTabVisible, setTabVisibility] = useState(true);
   const isVisible = usePageVisibility();
 
@@ -63,10 +78,22 @@ const ChatScreen = () => {
     if (currentUser?.uid) {
       updateDoc(doc(db, "users", `${currentUser?.uid}`), {
         status: isTabVisible,
+        lastSeen: Timestamp.now(),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible]);
+  // Handle browser window close
+  window.addEventListener("beforeunload", () => {
+    // Attempt to update user's status to offline
+
+    if (currentUser?.uid) {
+      updateDoc(doc(db, "users", `${currentUser?.uid}`), {
+        status: true,
+        lastSeen: Timestamp.now(),
+      });
+    }
+  });
 
   // this is for chat default scroll to latest chat
   useEffect(() => {
@@ -84,7 +111,7 @@ const ChatScreen = () => {
       alert("Escape");
     }
     if (evt.key === "Enter") {
-      if (text !== "") {
+      if (text.trim() !== "") {
         handleSent();
       }
     }
@@ -188,7 +215,7 @@ const ChatScreen = () => {
           borderRadius: "30px",
           bgcolor: bg_color,
           width: "content-fit",
-          p: "0px 10px 0px 0px",
+          p: "0px 6px 0px 0px",
           m: 0,
         }}
       >
@@ -211,49 +238,53 @@ const ChatScreen = () => {
                 }}
               />
             </Box>
-            <Box
-              sx={{
-                maxHeight: "90%",
-                borderRadius: "4%",
-                overflowY: "scroll",
-                scrollBehavior: "smooth",
-                cursor: "auto",
-                p: "0 5px 0 5px",
-                "&::-webkit-scrollbar": {
-                  width: "6px",
-                  height: "6px",
-                },
-                "&::-webkit-scrollbar-track": {
-                  borderRadius: "10px",
-                  background: "transparent",
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  borderRadius: "10px",
-                  background: "transparent",
-                },
-                "&::-webkit-scrollbar-thumb:hover": {
-                  background: highlight,
-                },
-                "&::-webkit-scrollbar-thumb:active": {
-                  background: "rgba(0, 0, 0, 0.9)",
-                },
-              }}
-            >
-              <ContactCardList
-                //  data={inputSearch === "" ? contactList : searchContact}
-                showChatOnly={selectedMenu}
-                data={
-                  inputSearch === ""
-                    ? selectedMenu === "contact"
-                      ? contactList
-                      : chatContact
-                    : searchContact
-                }
-                // onClick={handleSelect(data.uid)}
-              />
+            {chatContact && (
+              <Box
+                sx={{
+                  animation:
+                    "slide-in-top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both",
+                  maxHeight: "90%",
+                  borderRadius: "4%",
+                  overflowY: "scroll",
+                  scrollBehavior: "smooth",
+                  cursor: "auto",
+                  p: "0 10px 0 5px",
+                  "&::-webkit-scrollbar": {
+                    width: "6px",
+                    height: "6px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    borderRadius: "10px",
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    borderRadius: "10px",
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: highlight,
+                  },
+                  "&::-webkit-scrollbar-thumb:active": {
+                    background: "rgba(0, 0, 0, 0.9)",
+                  },
+                }}
+              >
+                <ContactCardList
+                  //  data={inputSearch === "" ? contactList : searchContact}
+                  showChatOnly={selectedMenu}
+                  data={
+                    inputSearch === ""
+                      ? selectedMenu === "contact"
+                        ? contactList
+                        : chatContact
+                      : searchContact
+                  }
+                  // onClick={handleSelect(data.uid)}
+                />
 
-              {/* <AllChatContactList /> */}
-            </Box>
+                {/* <AllChatContactList /> */}
+              </Box>
+            )}
           </Box>
           <Box
             className="chat-screen"
@@ -376,7 +407,9 @@ const ChatScreen = () => {
                     val={text}
                     onChange={(e) => setText(e.target.value)}
                   />
+                  {/* this is for image upload */}
                   <MoreOption />
+                  <PhotoPreview />
                   <IconButton sx={{ color: text_color, ml: "79px" }}>
                     <BiMicrophone />
                   </IconButton>
@@ -410,7 +443,7 @@ const ChatScreen = () => {
           </Box>
         </Box>
         {/*Profile Details Card */}
-        {currentUser.uid && (
+        {currentUser?.uid && (
           <ProfileDetails
             sender={sender?.uid?.length > 0 ? sender : currentUser}
           />

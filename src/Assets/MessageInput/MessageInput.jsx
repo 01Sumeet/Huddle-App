@@ -32,7 +32,7 @@ const MessageInput = (prop) => {
       >
         <BsFillEmojiSmileFill size={20} />
       </IconButton>
-     
+
       <InputBase
         sx={{
           ml: 1,
@@ -51,9 +51,7 @@ const MessageInput = (prop) => {
         value={prop.val}
         onChange={prop.onChange}
       />
-      
     </Paper>
-    
   );
 };
 

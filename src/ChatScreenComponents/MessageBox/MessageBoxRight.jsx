@@ -2,6 +2,7 @@ import { Box, Paper, Typography } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useContext } from "react";
 import { AuthContext } from "../../Context/AuthContext";
+import "../../Animation/Animation.css";
 
 const time_stamp = "#656769";
 const chat_font = "#F1F2F5";
@@ -22,7 +23,11 @@ const MessageBoxRight = (msg) => {
   return (
     <>
       <Box
-        sx={{ bgcolor: "transparent", m: 0.5, outline: "none" }}
+        sx={{
+          bgcolor: "transparent",
+          m: 0.5,
+          outline: "none",
+        }}
         key={msg?.data?.id}
       >
         <Box
@@ -40,6 +45,9 @@ const MessageBoxRight = (msg) => {
               minWidth: "160px",
               p: "14px 14px 11px 16px",
               borderRadius: "20px",
+              animation:
+                " scale-up-hor-right 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both",
+              backfaceVisibility: "hidden",
             }}
           >
             <Box>

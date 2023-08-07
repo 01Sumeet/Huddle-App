@@ -21,8 +21,6 @@ const ProfileDetails = (details) => {
           justifyContent: "flex-start",
           flexDirection: "column",
           p: "18px 10px 17px 15px",
-          animation:
-            "slide-in-fwd-center 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both",
         }}
         className="Profile-detail"
       >
@@ -35,7 +33,10 @@ const ProfileDetails = (details) => {
         </Box>
         <Paper
           elevation={10}
+          key={details?.sender?.displayName}
           sx={{
+            animation:
+              "swing-in-top-fwd 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both",
             height: "fit-content",
             bgcolor: highlight,
             textAlign: "center",

@@ -18,7 +18,7 @@ const ContactCardList = (prop) => {
   const { setSender } = useUserChat();
   const { contactList } = useContactListContext();
   const [selectedContact, setSelectedContact] = useState();
-  const [selectPin, setSelectPin] = useState();
+  const [selectPin, setSelectPin] = useState(null);
   const { currentUser } = useAuthContext();
 
   const convertUnixTimestampToTime = (unixTimestamp) => {
@@ -75,8 +75,22 @@ const ContactCardList = (prop) => {
       currentUser?.uid > val ? currentUser?.uid + val : val + currentUser?.uid;
     console.log(currentUser?.uid);
     try {
-      await updateDoc(doc(db, "chats", combinedId), {
+      updateDoc(doc(db, "chats", combinedId), {
         "SenderInfo.pin": true,
+      });
+      toast("Chat Pinned ", {
+        icon: "📌",
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
       });
     } catch (error) {
       toast.error(" An error encounterd", {
@@ -93,6 +107,48 @@ const ContactCardList = (prop) => {
         },
       });
     }
+    setSelectPin(null);
+  };
+
+  const handleSetUnPin = (event, val) => {
+    event.stopPropagation();
+    const combinedId =
+      currentUser?.uid > val ? currentUser?.uid + val : val + currentUser?.uid;
+    console.log(currentUser?.uid);
+    try {
+      updateDoc(doc(db, "chats", combinedId), {
+        "SenderInfo.pin": false,
+      });
+      toast("Chat UnPin", {
+        icon: "📌",
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
+      });
+    } catch (error) {
+      toast.error(" An error encounterd", {
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
+      });
+    }
+    setSelectPin(null);
   };
 
   // You can perform additional actions here if needed
@@ -121,7 +177,7 @@ const ContactCardList = (prop) => {
   //   excludedObject.map((x) => x),
   //   "sorted ======================>>>>>>>>>>",
   //   sorted
-  //   // prop?.data?.sort((a, b) => a.date.nanoseconds - b.date.nanoseconds)
+  // prop?.data?.sort((a, b) => a.date.nanoseconds - b.date.nanoseconds)
   // );
 
   // console.log("Sumitt", data);
@@ -308,10 +364,15 @@ const ContactCardList = (prop) => {
                       position: "absolute",
                       display: "flex",
                       flexDirection: "row",
-                      bgcolor: "#202329",
-                      boxShadow: "-7px 7px 9px -5px #6b8afd",
+                      bgcolor: "rgba(255, 255, 255, 0.1)",
+                      boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+                      backdropFilter: "blur(12.5px)",
+                      WebkitBackdropFilter: "blur(12.5px)",
+                      borderRadius: "10px",
+                      border: "0px solid rgba(255, 255, 255, 0.18)",
+                      // boxShadow: "-7px 7px 9px -5px #6b8afd",
                       padding: "5px 5px 0 5px",
-                      borderRadius: "14px",
+                      // borderRadius: "14px",
                     }}
                   >
                     <Box
@@ -334,7 +395,17 @@ const ContactCardList = (prop) => {
                       component={"span"}
                       sx={{ color: text_color, m: "7px" }}
                     >
-                      <RiUnpinFill sx={{ m: 0 }} />
+                      <RiUnpinFill
+                        sx={{ m: 0 }}
+                        onClick={(e) =>
+                          handleSetUnPin(
+                            e,
+                            data?.ReciverInfo?.reciever === currentUser?.uid
+                              ? data?.SenderInfo?.senderId
+                              : data?.ReciverInfo?.reciever
+                          )
+                        }
+                      />
                     </Box>
                   </Box>
                 </Box>
@@ -424,7 +495,7 @@ const ContactCardList = (prop) => {
                         filter: "drop-shadow(1px 1px 2px #00FF00)",
                         visibility: !data?.status ? "visible" : "hidden",
                         animation:
-                          "text-focus-in 0.9s cubic-bezier(0.55, 0.085, 0.68, 0.53) infinite both",
+                          "breathing 3s infinite",
                       }}
                     >
                       ●
