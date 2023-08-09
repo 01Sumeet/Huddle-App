@@ -304,7 +304,7 @@ const ChatScreen = () => {
                   pt: "10px",
                   overflowY: "scroll",
                   scrollBehavior: "smooth",
-                  cursor: "auto",
+                
                   "&::-webkit-scrollbar": {
                     width: "6px",
                     height: "6px",

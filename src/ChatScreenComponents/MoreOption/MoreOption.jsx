@@ -21,7 +21,6 @@ export default function MoreOption() {
   const inputFile = useRef(null);
 
   const handleSetPhoto = () => {
-    console.log("img", image);
     if (!image) {
       return;
     }
@@ -55,7 +54,6 @@ export default function MoreOption() {
         () => {
           getDownloadURL(uploadTask.snapshot.ref)
             .then((downloadURL) => {
-              console.log("File available at", downloadURL);
               setImgFile(downloadURL);
               setOpen(false);
               // You can use the downloadURL to display the uploaded image or store it in a database, etc.
@@ -69,7 +67,6 @@ export default function MoreOption() {
       console.log("🔴photo upload fail", error);
     }
     setImage(null);
-    console.log(image);
   };
 
   useEffect(() => {

@@ -64,7 +64,7 @@ const MessageBoxLeft = (msg) => {
                 sx={{
                   fontSize: "16px",
                   fontFamily: "Poppins, sans-serif",
-                  color: chat_font,
+                  color: "#f1f2f5b0",
                 }}
               >
                 {msg?.sender?.displayName}
@@ -109,11 +109,11 @@ const MessageBoxLeft = (msg) => {
             <Box
               sx={{
                 float: "right",
-                color: "#959597",
+                color: "#656769",
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-              <VisibilityOffIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />
+              <VisibilityOffIcon sx={{ mb: "-5.5px", fontSize: "18.5px" }} />
               <Typography
                 component="span"
                 sx={{
@@ -124,7 +124,7 @@ const MessageBoxLeft = (msg) => {
               ></Typography>
               <Typography
                 component="span"
-                sx={{ fontSize: "13px", fontFamily: "Poppins, sans-serif" }}
+                sx={{ fontSize: "12px", fontFamily: "Poppins, sans-serif" }}
               >
                 03:47AM
               </Typography>

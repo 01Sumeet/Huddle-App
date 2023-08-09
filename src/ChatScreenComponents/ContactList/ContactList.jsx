@@ -14,7 +14,6 @@ const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
 const ContactCardList = (prop) => {
-  console.log("Propp", prop?.data);
   const { setSender } = useUserChat();
   const { contactList } = useContactListContext();
   const [selectedContact, setSelectedContact] = useState();
@@ -52,7 +51,6 @@ const ContactCardList = (prop) => {
     const data = contactList?.find((user) => user.uid === uid);
     if (prop?.showChatOnly === "chats") {
       setSender(data);
-      console.log("Dta", data);
     } else {
       setSender(uid);
     }
@@ -67,14 +65,13 @@ const ContactCardList = (prop) => {
   const handleContextMenu = async (event, val) => {
     setSelectPin(val);
     event.preventDefault(); // Prevent the default context menu from showing up
-    console.log("Right-click event detected!", val);
   };
 
   const handleSetUnPin = (event, val) => {
     event.stopPropagation();
     const combinedId =
       currentUser?.uid > val ? currentUser?.uid + val : val + currentUser?.uid;
-    console.log(currentUser?.uid);
+
     try {
       updateDoc(doc(db, "chats", combinedId), {
         "SenderInfo.pin": false,

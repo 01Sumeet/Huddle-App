@@ -11,7 +11,6 @@ const ProfileDetails = (details) => {
   const { currentUser } = useAuthContext();
   const { status } = useStatusContext();
 
-  console.log("detailssss", details);
   return (
     <>
       <Box
