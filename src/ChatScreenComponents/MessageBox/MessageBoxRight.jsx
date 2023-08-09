@@ -16,7 +16,7 @@ const MessageBoxRight = (msg) => {
       minute: "2-digit",
     });
   };
-  const unixTimestamp = msg?.data?.date.seconds;
+  const unixTimestamp = msg?.data?.date?.seconds;
   const formattedTime = convertUnixTimestampToTime(unixTimestamp);
 
   const myArray = ["#ffcda5", "#4aac67", "#A9D2FD", "#ffe5a5", "#cd413c"];
@@ -59,7 +59,6 @@ const MessageBoxRight = (msg) => {
                   color: chat_font,
                 }}
               >
-                {/* {currentUser?.displayName} */}
                 Me
               </Typography>
               <Typography
@@ -116,9 +115,7 @@ const MessageBoxRight = (msg) => {
                   fontSize: "13px",
                   fontFamily: "Poppins, sans-serif",
                 }}
-              >
-                {/* {Math.floor(Math.random() * 10) + 1} */}
-              </Typography>
+              ></Typography>
               <Typography
                 component="span"
                 sx={{ fontSize: "13px", fontFamily: "Poppins, sans-serif" }}
@@ -131,7 +128,7 @@ const MessageBoxRight = (msg) => {
             elevation={10}
             sx={{
               bgcolor: myArray[1],
-              borderRadius: "12px",
+              borderRadius: "15px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

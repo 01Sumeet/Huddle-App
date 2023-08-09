@@ -1,16 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../Firebase/firebaseConfig";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  or,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot, or, query, where } from "firebase/firestore";
 import { useAuthContext } from "./AuthContext";
-import { useContactListContext } from "./ContactListContext";
-import { useUserChat } from "./UserChatContext";
 
 export const chatContactContext = createContext({
   chatContact: [],
@@ -45,18 +36,6 @@ export const ChatContactContextProvider = (prop) => {
         unsubscribe();
       };
     });
-    // try {
-    //   const q = query(collection(db, "users"));
-    //   onSnapshot(q, (userContacts) => {
-    //     const data = [];
-    //     userContacts.forEach((doc) => {
-    //       data.push(doc.data());
-    //     });
-    //     setContactList(data);
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
 
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.uid]);

@@ -54,18 +54,8 @@ const ChatScreen = () => {
   const { selectedMenu, imgFile, setImgFile } = useSelectedMenu();
   const [text, setText] = useState("");
   const [inputSearch, setInputSearch] = useState("");
-  const container = containerRef.current;
+  const container = containerRef?.current;
   const Change = userChat?.messages?.length;
-
-  //
-  // const connectedRef = ref(db, "");
-  // onValue(connectedRef, (snap) => {
-  //   if (snap.val() === true) {
-  //     console.log("connected");
-  //   } else {
-  //     console.log("not connected");
-  //   }
-  // });
 
   //
 
@@ -105,7 +95,7 @@ const ChatScreen = () => {
       }
     };
     scrollToLastElement();
-  }, [container?.scrollHeight, Change]);
+  }, [container, Change]);
 
   //on hitting Enter & Escape Key to send message and go back to main screen
   const esckey = (evt) => {
@@ -272,7 +262,6 @@ const ChatScreen = () => {
                 }}
               >
                 <ContactCardList
-                  //  data={inputSearch === "" ? contactList : searchContact}
                   showChatOnly={selectedMenu}
                   data={
                     inputSearch === ""
@@ -281,10 +270,7 @@ const ChatScreen = () => {
                         : chatContact
                       : searchContact
                   }
-                  // onClick={handleSelect(data.uid)}
                 />
-
-                {/* <AllChatContactList /> */}
               </Box>
             )}
           </Box>
@@ -305,23 +291,7 @@ const ChatScreen = () => {
             <Box>
               <Box sx={{ color: textHeading }}>{sender?.displayName}</Box>
               <Box component="p" sx={{ fontSize: "10px" }}>
-                {/* 42 Members, 10 Online */}
                 {sender?.status ? "Not Active" : "Online"}
-                {/* <Typography
-                  component={"small"}
-                  title="User is Online"
-                  sx={{
-                    ml: "10px",
-                    position:"relative",
-                    top:"1px",
-                    color: "#00FF00",
-                    fontSize: "16px",
-                    filter: "drop-shadow(1px 1px 2px #00FF00)",
-                    visibility: !sender?.status ? "visible" : "hidden",
-                  }}
-                >
-                  ●
-                </Typography> */}
               </Box>
               <Box
                 ref={containerRef}
@@ -355,7 +325,6 @@ const ChatScreen = () => {
                   },
                 }}
               >
-                {/* {userChat?.messages?.length < 0 ? ( */}
                 {userChat?.length === 0 ? (
                   <>
                     <Box
@@ -422,7 +391,6 @@ const ChatScreen = () => {
                   <IconButton
                     sx={{ color: text_color }}
                     onClick={text === "" ? null : handleSent}
-                    // onKeyDown={(e) => handleKey(e)}
                   >
                     <AiOutlineSend />
                   </IconButton>

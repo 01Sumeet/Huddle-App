@@ -11,7 +11,6 @@ import toast, { Toaster } from "react-hot-toast";
 // import './login.scss'
 // const notify = (val) => toast(val);
 const Login = () => {
-  
   const navigate = useNavigate();
   const initialValue = {
     email: "",
@@ -132,7 +131,7 @@ const Login = () => {
               </div>
               <div className="action">
                 {/* <button onClick={}>Make me a toast</button> */}
-                
+
                 <Button className="signup-btn" text="Log In" type="submit" />
               </div>
             </div>

@@ -1,19 +1,9 @@
-import {
-  GridList,
-  GridListTile,
-  makeStyles,
-  Modal,
-  Backdrop,
-  Fade,
-  Box,
-  IconButton,
-} from "@material-ui/core";
+import { makeStyles, Modal, Backdrop, Box } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import MessageInput from "../../Assets/MessageInput/MessageInput";
 import { useSelectedMenu } from "../../Context/SelectedMenu";
 import { v4 as uuidv4 } from "uuid";
-import { AiOutlineSend } from "react-icons/ai";
 import { useAuthContext } from "../../Context/AuthContext";
 import {
   Timestamp,
@@ -52,8 +42,6 @@ const PhotoPreview = () => {
   const [open, setOpen] = useState(true);
   const { imgFile, setImgFile } = useSelectedMenu();
 
-  console.log("imggg", imgFile);
-
   const handleClose = () => {
     setOpen(false);
     setImgFile(null);
@@ -61,9 +49,9 @@ const PhotoPreview = () => {
 
   useEffect(() => {
     imgFile ? setOpen(true) : setOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!imgFile === undefined]);
   const handleSent = async () => {
-    alert("Hello");
     const combinedId =
       currentUser?.uid > sender?.uid
         ? currentUser?.uid + sender?.uid
@@ -147,18 +135,6 @@ const PhotoPreview = () => {
         esckey(event);
       }}
     >
-      {/* <GridList className={classes.gridList} cols={2.5}>
-        {tileData.map((tile) => (
-          <GridListTile key={tile.img} className="container">
-            <img
-              src={tile.img}
-              alt={tile.title}
-              onClick={(e) => handleImage(tile.img)}
-              className="img"
-            />
-          </GridListTile>
-        ))}
-      </GridList> */}
       <Modal
         className={classes.modal}
         open={open}

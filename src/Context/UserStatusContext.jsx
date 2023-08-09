@@ -22,7 +22,6 @@ export const UserStatusProvider = (prop) => {
         try {
           const source = docSnap.metadata.hasPendingWrites ? "Local" : "Server";
           const data = docSnap?.data();
-          console.log(source, " data: ", docSnap.data());
           setStatus(data);
         } catch (error) {
           console.log(error);

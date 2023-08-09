@@ -7,10 +7,9 @@ import "../../Animation/Animation.css";
 import { useContactListContext } from "../../Context/ContactListContext";
 import { useAuthContext } from "../../Context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
-import Button from "@mui/material/Button";
 import { db } from "../../Firebase/firebaseConfig";
 import toast from "react-hot-toast";
-import { CameraAltRounded } from "@mui/icons-material";
+
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
@@ -310,7 +309,6 @@ const ContactCardList = (prop) => {
                 </Box>
                 <Box
                   sx={{
-                    //  position: "relative",
                     bgcolor: "#6b8afd",
                     height: "19px",
                     width: "19px",
@@ -335,7 +333,6 @@ const ContactCardList = (prop) => {
                 <Box
                   component={"span"}
                   sx={{
-                    // bgcolor: "#2e343d",
                     position: "relative",
                     top: "-7%",
                     right: "110%",
@@ -362,9 +359,7 @@ const ContactCardList = (prop) => {
                       WebkitBackdropFilter: "blur(12.5px)",
                       borderRadius: "10px",
                       border: "0px solid rgba(255, 255, 255, 0.18)",
-                      // boxShadow: "-7px 7px 9px -5px #6b8afd",
                       padding: "5px 5px 0 5px",
-                      // borderRadius: "14px",
                     }}
                   >
                     <Box
@@ -428,9 +423,7 @@ const ContactCardList = (prop) => {
                   handleSelect(data);
                   handleSelectedContact(data.uid);
                 }}
-                // onClick={() => showText("Hello")}
                 key={index}
-                // elevation={4}
                 sx={{
                   bgcolor: "#2e343d",
                   display: "flex",

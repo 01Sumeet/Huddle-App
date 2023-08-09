@@ -5,12 +5,11 @@ import { IoCalendar, IoSettingsSharp } from "react-icons/io5";
 import { MdAnalytics, MdBookmarks } from "react-icons/md";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelectedMenu } from "../../Context/SelectedMenu";
 const text_color = "#a9aeba";
 
 const SideBar = () => {
-  const { setSelectedMenu, selectedMenu } = useSelectedMenu();
+  const { setSelectedMenu } = useSelectedMenu();
   const [selectedButton, setSelectedButton] = useState("chats");
 
   const handleButtonClick = (button, takeRoute) => {
@@ -24,7 +23,6 @@ const SideBar = () => {
         <Box
           sx={{
             bgcolor: "transparent",
-            // height: "96.5%",
           }}
         >
           <Avatar
@@ -151,7 +149,6 @@ const SideBar = () => {
               disablePadding
               sx={{
                 bgcolor: selectedButton === "setting" ? "#6b8afd29" : "",
-     
               }}
             >
               <ListItemButton sx={{ display: "initial" }}>

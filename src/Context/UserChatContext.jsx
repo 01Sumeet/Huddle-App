@@ -15,8 +15,6 @@ export const UserChatContextprovider = (prop) => {
   const [sender, setSender] = useState([]);
   const { currentUser } = useAuthContext();
 
-  //
-
   const combinedId =
     currentUser?.uid > sender?.uid
       ? currentUser?.uid + sender?.uid
@@ -26,7 +24,6 @@ export const UserChatContextprovider = (prop) => {
   useEffect(() => {
     try {
       onSnapshot(doc(db, "chats", `${combinedId}`), (doc) => {
-        // console.log("iammm", combinedId);
         const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
         const data = doc.data();
         if (data !== undefined && data !== "undefined") {
@@ -35,20 +32,9 @@ export const UserChatContextprovider = (prop) => {
           setUserChat([]);
         }
       });
-      // const chatData = [];
-      // onSnapshot(q, (chat) => {
-      //   chat.forEach((doc) => {
-      //     chatData.splice(0, 1);
-      //     chatData.push(doc.data());
-      //     console.log("chatttttt", doc);
-      //   });
-      // });
-      // setUserChat(chatData);
-      // console.log("Kahliiii", chatData);
     } catch (error) {
       console.log(error);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sender]);
 

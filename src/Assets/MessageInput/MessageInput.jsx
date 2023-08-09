@@ -5,15 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import { BsFillEmojiSmileFill } from "react-icons/bs";
 import { AiOutlineSend } from "react-icons/ai";
 
-// --bg-color: #131313;
-// --bg-up-color: #2e343d;
-// --highlight: #6b8afd;
-// --text-color: #a9aeba;
-
 const MessageInput = (prop) => {
-  // const { keyBoardEvent } = prop;
-  console.log("pppp", prop, onclick);
-
   return (
     <Paper
       elevation={10}
@@ -44,7 +36,6 @@ const MessageInput = (prop) => {
           outline: "none",
           border: "0px",
           fontFamily: "Poppins, sans-serif",
-          // border: "1px solid red",
           ":focus": {
             border: "none",
           },

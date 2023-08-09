@@ -81,7 +81,7 @@ const SignUp = () => {
     const displayName = `${values.firstName} ${values.lastName}`;
     const file = values.file;
     const phoneNumber = values.phoneNumber;
-    // console.log("=====>>>>>>>>", file, values);
+
     try {
       const res = await createUserWithEmailAndPassword(
         auth,
@@ -94,7 +94,7 @@ const SignUp = () => {
       const date = new Date().getTime();
       const storageRef = ref(storage, `${displayName + date}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
-      await uploadTask?.on(
+      uploadTask?.on(
         "state_changed",
         (snapshot) => {
           const progress =
@@ -142,24 +142,12 @@ const SignUp = () => {
     } catch (error) {
       console.log("🔴photo fail", error);
     }
-    // .then((userCredential) => {
-    //     toast.success("Signed In ✅");
-    // })
-    // .catch((error) => {
-    //     console.log(error);
-    //     alert("User not found", error.code, "==>🙄", error.message)
-    // });
   };
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={FormValues}
       onSubmit={handleSubmit}
-      // onSubmit={values => {
-      //     debugger
-      // Handle form submission
-      //     alert(JSON.stringify(values));
-      // }}
     >
       {(formikProps) => (
         <Form className="main-container" style={{ color: "white" }}>
@@ -178,11 +166,6 @@ const SignUp = () => {
                   formikProps.setFieldValue("file", event.target.files[0]);
                 }}
               />
-              {/* <img
-                                className="musician imgg"
-                                src={require("./image/rapper.png")}f
-                                alt=""
-                            /> */}
             </div>
             <div className="social-icons">
               <span className="icon">
@@ -217,12 +200,6 @@ const SignUp = () => {
             <div className="input-div">
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <div className="input-filed">
-                  {/* <InputField
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formikProps.values.firstName}
-                    onChange={formikProps.handleChange("firstName")}
-                  /> */}
                   <TextField
                     sx={{ color: "white" }}
                     id="outlined-basic"
@@ -328,13 +305,7 @@ const SignUp = () => {
                       label="Password"
                     />
                   </FormControl>
-                  {/* <TextField
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                    value={formikProps.values.password}
-                    onChange={formikProps.handleChange("password")}
-                  /> */}
+
                   <div className="input-error">
                     <ErrorMessage
                       className="error"
@@ -344,13 +315,6 @@ const SignUp = () => {
                   </div>
                 </div>
                 <div className="input-filed">
-                  {/* <TextField
-                    name="confirmPassword"
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={formikProps.values.confirmPassword}
-                    onChange={formikProps.handleChange("confirmPassword")}
-                  /> */}
                   <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">
                       Confirm Password

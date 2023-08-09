@@ -2,34 +2,24 @@
 import Box from "@mui/material/Box";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import HeadsetIcon from "@mui/icons-material/Headset";
 import EditIcon from "@mui/icons-material/Edit";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import "./MoreOption.css";
 import { ImAttachment } from "react-icons/im";
 import { storage } from "../../Firebase/firebaseConfig";
-import { useAuthContext } from "../../Context/AuthContext";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import { useSelectedMenu } from "../../Context/SelectedMenu";
 import { v4 as uuidv4 } from "uuid";
-const actions = [
-  { icon: <AddPhotoAlternateIcon />, name: "Send Photo" },
-  { icon: <VideocamIcon />, name: "Send Video" },
-  { icon: <InsertDriveFileIcon />, name: "Document" },
-  { icon: <HeadsetIcon />, name: "Audio File" },
-];
 
 export default function MoreOption() {
   const { setImgFile } = useSelectedMenu();
-  const { currentUser } = useAuthContext();
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const inputFile = useRef(null);
+
   const handleSetPhoto = () => {
     console.log("img", image);
     if (!image) {
@@ -67,6 +57,7 @@ export default function MoreOption() {
             .then((downloadURL) => {
               console.log("File available at", downloadURL);
               setImgFile(downloadURL);
+              setOpen(false);
               // You can use the downloadURL to display the uploaded image or store it in a database, etc.
             })
             .catch((error) => {

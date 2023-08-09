@@ -1,5 +1,4 @@
 import { Box, Paper, Typography } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import "../../Animation/Animation.css";
 
@@ -35,7 +34,7 @@ const MessageBoxLeft = (msg) => {
             elevation={10}
             sx={{
               bgcolor: myArray[2],
-              borderRadius: "12px",
+              borderRadius: "15px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -103,7 +102,6 @@ const MessageBoxLeft = (msg) => {
                 lineHeight: "1.2",
                 fontWeight: "300",
                 pt: 1,
-                // minHeight: "58px",
               }}
             >
               {msg?.data?.text}
@@ -115,7 +113,6 @@ const MessageBoxLeft = (msg) => {
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-              {/* <VisibilityIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />{" "} */}
               <VisibilityOffIcon sx={{ mb: "-5.5px", fontSize: "20.5px" }} />
               <Typography
                 component="span"
@@ -124,9 +121,7 @@ const MessageBoxLeft = (msg) => {
                   fontSize: "13px",
                   fontFamily: "Poppins, sans-serif",
                 }}
-              >
-                {/* {Math.floor(Math.random() * 10) + 1} */}
-              </Typography>
+              ></Typography>
               <Typography
                 component="span"
                 sx={{ fontSize: "13px", fontFamily: "Poppins, sans-serif" }}
