@@ -73,7 +73,7 @@ const ChatScreen = () => {
   const isVisible = usePageVisibility();
 
   // this function ensure that weather user is online or not
-  useEffect(() => {
+  useMemo(() => {
     setTabVisibility(isVisible);
     if (currentUser?.uid) {
       updateDoc(doc(db, "users", `${currentUser?.uid}`), {
@@ -100,10 +100,12 @@ const ChatScreen = () => {
     const scrollToLastElement = () => {
       if (container) {
         container.scrollTop = container.scrollHeight;
+
+        console.log("heightt", container.scrollHeight);
       }
     };
     scrollToLastElement();
-  }, [container, Change]);
+  }, [container?.scrollHeight, Change]);
 
   //on hitting Enter & Escape Key to send message and go back to main screen
   const esckey = (evt) => {
@@ -405,11 +407,12 @@ const ChatScreen = () => {
                   <MessageInput
                     placeHolder="Type your message here..!!!"
                     val={text}
+                    sendBtn={false}
                     onChange={(e) => setText(e.target.value)}
                   />
                   {/* this is for image upload */}
                   <MoreOption />
-                  <PhotoPreview />
+                  {imgFile ? <PhotoPreview /> : null}
                   <IconButton sx={{ color: text_color, ml: "79px" }}>
                     <BiMicrophone />
                   </IconButton>

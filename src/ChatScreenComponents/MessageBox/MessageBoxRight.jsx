@@ -41,7 +41,7 @@ const MessageBoxRight = (msg) => {
             elevation={10}
             sx={{
               bgcolor: "#2E343D",
-              maxWidth: "260px",
+              maxWidth: "333px",
               minWidth: "160px",
               p: "14px 14px 11px 16px",
               borderRadius: "20px",
@@ -74,6 +74,20 @@ const MessageBoxRight = (msg) => {
                 {formattedTime}
               </Typography>
             </Box>
+
+            {msg?.data?.image && (
+              <Box>
+                <img
+                  src={msg?.data?.image}
+                  alt=""
+                  style={{
+                    maxWidth: "300px",
+                    maxHeight: "250px",
+                    borderRadius: "16px",
+                  }}
+                />
+              </Box>
+            )}
             <Typography
               sx={{
                 fontSize: "13px",

@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { BsFillEmojiSmileFill } from "react-icons/bs";
+import { AiOutlineSend } from "react-icons/ai";
 
 // --bg-color: #131313;
 // --bg-up-color: #2e343d;
@@ -11,6 +12,7 @@ import { BsFillEmojiSmileFill } from "react-icons/bs";
 
 const MessageInput = (prop) => {
   // const { keyBoardEvent } = prop;
+  console.log("pppp", prop, onclick);
 
   return (
     <Paper
@@ -51,6 +53,11 @@ const MessageInput = (prop) => {
         value={prop.val}
         onChange={prop.onChange}
       />
+      {prop?.sendBtn ? (
+        <IconButton sx={{ color: "#a9aeba" }}>
+          <AiOutlineSend onClick={prop.onclick} />
+        </IconButton>
+      ) : null}
     </Paper>
   );
 };

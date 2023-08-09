@@ -14,7 +14,7 @@ import { useAuthContext } from "../../Context/AuthContext";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import { useSelectedMenu } from "../../Context/SelectedMenu";
-
+import { v4 as uuidv4 } from "uuid";
 const actions = [
   { icon: <AddPhotoAlternateIcon />, name: "Send Photo" },
   { icon: <VideocamIcon />, name: "Send Video" },
@@ -35,9 +35,9 @@ export default function MoreOption() {
     if (!image) {
       return;
     }
-    alert();
+
     try {
-      const storageRef = ref(storage, `${currentUser?.uid}`);
+      const storageRef = ref(storage, `${uuidv4()}`);
       const uploadTask = uploadBytesResumable(storageRef, image);
 
       uploadTask?.on(

@@ -53,7 +53,7 @@ const MessageBoxLeft = (msg) => {
                 "scale-up-hor-left 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both",
               backfaceVisibility: "hidden",
               bgcolor: "#2E343D",
-              maxWidth: "260px",
+              maxWidth: "333px",
               minWidth: "160px",
               p: "14px 14px 11px 16px",
               borderRadius: "20px",
@@ -82,6 +82,19 @@ const MessageBoxLeft = (msg) => {
                 {formattedTime}
               </Typography>
             </Box>
+            {msg?.data?.image && (
+              <Box>
+                <img
+                  src={msg?.data?.image}
+                  alt=""
+                  style={{
+                    maxWidth: "300px",
+                    maxHeight: "250px",
+                    borderRadius: "16px",
+                  }}
+                />
+              </Box>
+            )}
             <Typography
               sx={{
                 fontSize: "13px",

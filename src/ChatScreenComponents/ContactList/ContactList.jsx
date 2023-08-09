@@ -10,6 +10,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import { db } from "../../Firebase/firebaseConfig";
 import toast from "react-hot-toast";
+import { CameraAltRounded } from "@mui/icons-material";
 const text_color = "#a9aeba";
 const textHeading = "#FEFEFF";
 
@@ -61,53 +62,13 @@ const ContactCardList = (prop) => {
   // To make card selected
   const handleSelectedContact = (uid) => {
     setSelectedContact(uid);
+    setSelectPin(null);
   };
 
   const handleContextMenu = async (event, val) => {
     setSelectPin(val);
     event.preventDefault(); // Prevent the default context menu from showing up
     console.log("Right-click event detected!", val);
-  };
-
-  const handleSetPin = async (event, val) => {
-    event.stopPropagation();
-    const combinedId =
-      currentUser?.uid > val ? currentUser?.uid + val : val + currentUser?.uid;
-    console.log(currentUser?.uid);
-    try {
-      updateDoc(doc(db, "chats", combinedId), {
-        "SenderInfo.pin": true,
-      });
-      toast("Chat Pinned ", {
-        icon: "📌",
-        style: {
-          padding: "10px",
-          fontFamily: "Poppins, sans-serif",
-          verticalAlign: "middle",
-          height: "30px",
-          margin: "10px",
-          borderRadius: "10px",
-          background: "#2e343d",
-          boxShadow: "-4px 11px 45px -4px #131313",
-          color: "#fff",
-        },
-      });
-    } catch (error) {
-      toast.error(" An error encounterd", {
-        style: {
-          padding: "10px",
-          fontFamily: "Poppins, sans-serif",
-          verticalAlign: "middle",
-          height: "30px",
-          margin: "10px",
-          borderRadius: "10px",
-          background: "#2e343d",
-          boxShadow: "-4px 11px 45px -4px #131313",
-          color: "#fff",
-        },
-      });
-    }
-    setSelectPin(null);
   };
 
   const handleSetUnPin = (event, val) => {
@@ -150,7 +111,6 @@ const ContactCardList = (prop) => {
     }
     setSelectPin(null);
   };
-
   // You can perform additional actions here if needed
 
   const excludedObject = prop?.data?.filter((x) =>
@@ -170,34 +130,66 @@ const ContactCardList = (prop) => {
   );
   const sorted = filterEx?.sort((x, y) => y?.date?.seconds - x?.date?.seconds);
   const data = [...excludedObject, ...sorted];
-  // console.log(
-  //   "Exx",
-  //   excludedObject,
-  //   "Filter ======>>>>",
-  //   excludedObject.map((x) => x),
-  //   "sorted ======================>>>>>>>>>>",
-  //   sorted
-  // prop?.data?.sort((a, b) => a.date.nanoseconds - b.date.nanoseconds)
-  // );
 
-  // console.log("Sumitt", data);
-  // console.log(
-  //   prop?.data,
-  //   "sumit",
-  //   prop?.data?.filter((x) =>
-  //     x?.ReciverInfo?.pin === currentUser?.uid
-  //       ? x?.SenderInfo?.pin === true
-  //       : x?.ReciverInfo?.pin !== true
-  //   )
-  // );
+  const handleSetPin = async (event, val) => {
+    event.stopPropagation();
+    const combinedId =
+      currentUser?.uid > val ? currentUser?.uid + val : val + currentUser?.uid;
+    console.log(currentUser?.uid);
 
-  // prop?.data
-  // ?.filter((x) =>
-  //   x?.ReciverInfo?.pin === currentUser?.uid
-  //     ? x?.SenderInfo?.pin === true
-  //     : x?.ReciverInfo?.pin !== true
-  // )
-  // ?.sort((x, y) => y.date.seconds - x.date.seconds)
+    if (excludedIndices.length > 2) {
+      toast("You can only pin upto three Chats", {
+        icon: "❌",
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
+      });
+      setSelectPin(null);
+      return false;
+    }
+    try {
+      updateDoc(doc(db, "chats", combinedId), {
+        "SenderInfo.pin": true,
+      });
+      toast("Chat Pinned ", {
+        icon: "📌",
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
+      });
+    } catch (error) {
+      toast.error(" An error encounterd", {
+        style: {
+          padding: "10px",
+          fontFamily: "Poppins, sans-serif",
+          verticalAlign: "middle",
+          height: "30px",
+          margin: "10px",
+          borderRadius: "10px",
+          background: "#2e343d",
+          boxShadow: "-4px 11px 45px -4px #131313",
+          color: "#fff",
+        },
+      });
+    }
+    setSelectPin(null);
+  };
 
   return (
     <>
@@ -291,7 +283,7 @@ const ContactCardList = (prop) => {
                     }}
                   >
                     {" "}
-                    {data?.lastMessage}
+                    {data?.lastMessage === "" ? "📷 Image" : data?.lastMessage}
                   </Typography>
                 </Box>
               </Box>
